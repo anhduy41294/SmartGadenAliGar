@@ -1,6 +1,7 @@
 package com.aliens.smartgarden.View;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -15,9 +16,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 
+import com.aliens.smartgarden.Chart.ListViewBarChartActivity;
 import com.aliens.smartgarden.Controller.LoaderHelper;
+import com.aliens.smartgarden.Global.GlobalVariable;
 import com.aliens.smartgarden.Model.RecordSituation;
 import com.aliens.smartgarden.R;
 
@@ -28,6 +32,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     Spinner spinner;
+    Button tuoinuocBtn, maiCheBtn;
+    GlobalVariable globalVariable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +42,9 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        globalVariable = new GlobalVariable();
         setUpSpinner();
+        setUpButton();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         assert fab != null;
         fab.setOnClickListener(new View.OnClickListener() {
@@ -97,13 +105,14 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        Intent i;
         if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
-
+            i = new Intent(this, ListViewBarChartActivity.class);
+            startActivity(i);
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
@@ -175,5 +184,36 @@ public class MainActivity extends AppCompatActivity
 
         // attaching data adapter to spinner
         spinner.setAdapter(dataAdapter);
+    }
+
+    private void setUpButton() {
+        tuoinuocBtn = (Button) findViewById(R.id.btnWater);
+        maiCheBtn = (Button) findViewById(R.id.btnCover);
+
+        tuoinuocBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (globalVariable.isTuoiNuoc) {
+                    globalVariable.isTuoiNuoc = false;
+                    tuoinuocBtn.setText("Tưới nước : OFF");
+                } else {
+                    globalVariable.isTuoiNuoc = true;
+                    tuoinuocBtn.setText("Tưới nước : ON");
+                }
+            }
+        });
+
+        maiCheBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (globalVariable.isManChe) {
+                    globalVariable.isManChe = false;
+                    maiCheBtn.setText("Mái che : OFF");
+                } else {
+                    globalVariable.isManChe = true;
+                    maiCheBtn.setText("Mái che : ON");
+                }
+            }
+        });
     }
 }

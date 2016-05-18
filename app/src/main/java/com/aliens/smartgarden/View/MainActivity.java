@@ -22,8 +22,10 @@ import android.widget.Spinner;
 import com.aliens.smartgarden.Chart.ListViewBarChartActivity;
 import com.aliens.smartgarden.Controller.LoaderHelper;
 import com.aliens.smartgarden.Global.GlobalVariable;
+import com.aliens.smartgarden.Model.RecordAction;
 import com.aliens.smartgarden.Model.RecordSituation;
 import com.aliens.smartgarden.R;
+import com.aliens.smartgarden.Service.RecordActionService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity
     Spinner spinner;
     Button tuoinuocBtn, maiCheBtn;
     GlobalVariable globalVariable;
+    RecordAction recordAction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,42 +130,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    /**
-     * AsyncTask
-     */
-    public class RecordSituationAsyncTask extends AsyncTask<String, Void, RecordSituation> {
-        View view;
-
-        ProgressDialog progressDialog;
-
-        public RecordSituationAsyncTask(View view) {
-            this.view = view;
-            progressDialog = new ProgressDialog(view.getContext());
-            progressDialog.setTitle("Loading");
-            progressDialog.show();
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected RecordSituation doInBackground(String... params) {
-
-            LoaderHelper loaderHelper = new LoaderHelper();
-            return loaderHelper.getLastestSituation();
-        }
-
-        @Override
-        protected void onPostExecute(RecordSituation o) {
-            super.onPostExecute(o);
-
-            //Set value to UI
-
-            progressDialog.dismiss();
-        }
-    }
 
     private void setUpSpinner() {
         spinner = (Spinner) findViewById(R.id.spnUserProfile);
@@ -216,4 +183,79 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }
+
+    /**
+     * AsyncTask
+     */
+    public class RecordSituationAsyncTask extends AsyncTask<String, Void, RecordSituation> {
+        View view;
+
+        ProgressDialog progressDialog;
+
+        public RecordSituationAsyncTask(View view) {
+            this.view = view;
+            progressDialog = new ProgressDialog(view.getContext());
+            progressDialog.setTitle("Loading");
+            progressDialog.show();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected RecordSituation doInBackground(String... params) {
+
+            LoaderHelper loaderHelper = new LoaderHelper();
+            return loaderHelper.getLastestSituation();
+        }
+
+        @Override
+        protected void onPostExecute(RecordSituation o) {
+            super.onPostExecute(o);
+
+            //Set value to UI
+
+            progressDialog.dismiss();
+        }
+    }
+
+    /**
+     * AsyncTask
+     */
+    public class SendRecordAction extends AsyncTask<String, Void, String> {
+        View view;
+
+        ProgressDialog progressDialog;
+
+        public SendRecordAction(View view) {
+            this.view = view;
+            progressDialog = new ProgressDialog(view.getContext());
+            progressDialog.setTitle("Loading");
+            progressDialog.show();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            RecordActionService recordActionService = new RecordActionService();
+            return recordActionService.postRecordAction(recordAction);
+        }
+
+        @Override
+        protected void onPostExecute(String respond) {
+            super.onPostExecute(respond);
+
+            //Set value to UI
+
+            progressDialog.dismiss();
+        }
+    }
+
 }

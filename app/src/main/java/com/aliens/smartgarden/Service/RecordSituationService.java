@@ -26,10 +26,10 @@ public class RecordSituationService {
         InputStream is = null;
 
         try {
-            con = (HttpURLConnection) ( new URL(url)).openConnection();
+            con = (HttpURLConnection) ( new URL("http://aligarapi.apphb.com/api/recordsituation/lastest")).openConnection();
             con.setRequestMethod("GET");
             con.setDoInput(true);
-            con.setDoOutput(true);
+            con.setDoOutput(false);
             con.connect();
 
             // Let's read the response

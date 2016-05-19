@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.aliens.smartgarden.Chart.ListViewBarChartActivity;
 import com.aliens.smartgarden.Controller.LoaderHelper;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity
     Button tuoinuocBtn, maiCheBtn;
     GlobalVariable globalVariable;
     RecordAction recordAction;
+    TextView nhietDoTxt, doAmTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,9 +60,15 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
+        nhietDoTxt = (TextView) findViewById(R.id.txtTemperature);
+        doAmTxt = (TextView) findViewById(R.id.txtHumidity);
 
         RecordSituationAsyncTask recordSituationAsyncTask = new RecordSituationAsyncTask();
         recordSituationAsyncTask.execute();
+
+//        recordAction = new RecordAction(3, "40");
+//        SendRecordAction sendRecordAction = new SendRecordAction();
+//        sendRecordAction.execute();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         assert drawer != null;
@@ -216,8 +224,8 @@ public class MainActivity extends AppCompatActivity
             super.onPostExecute(o);
 
             //Set value to UI
-            Log.d("server:", Float.toString(o.getHumidity()));
-
+            nhietDoTxt.setText(String.valueOf((int)o.getTemperature()));
+            doAmTxt.setText(String.valueOf((int)o.getHumidity()));
         }
     }
 
@@ -225,15 +233,8 @@ public class MainActivity extends AppCompatActivity
      * AsyncTask
      */
     public class SendRecordAction extends AsyncTask<String, Void, String> {
-        View view;
 
-        ProgressDialog progressDialog;
-
-        public SendRecordAction(View view) {
-            this.view = view;
-            progressDialog = new ProgressDialog(view.getContext());
-            progressDialog.setTitle("Loading");
-            progressDialog.show();
+        public SendRecordAction() {
         }
 
         @Override
@@ -252,9 +253,6 @@ public class MainActivity extends AppCompatActivity
         protected void onPostExecute(String respond) {
             super.onPostExecute(respond);
 
-            //Set value to UI
-
-            progressDialog.dismiss();
         }
     }
 

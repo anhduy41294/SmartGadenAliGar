@@ -6,17 +6,11 @@ import com.aliens.smartgarden.Model.RecordAction;
 
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.util.Iterator;
-
-import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by Duy on 18-May-16.
@@ -46,7 +40,7 @@ public class RecordActionService {
 
             OutputStream os = conn.getOutputStream();
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-            writer.write(getPostDataString(postDataParams));
+            writer.write(postDataParams.toString());
 
             writer.flush();
             writer.close();
@@ -81,28 +75,28 @@ public class RecordActionService {
 
     }
 
-    public String getPostDataString(JSONObject params) throws Exception {
-
-        StringBuilder result = new StringBuilder();
-        boolean first = true;
-
-        Iterator<String> itr = params.keys();
-
-        while(itr.hasNext()){
-
-            String key= itr.next();
-            Object value = params.get(key);
-
-            if (first)
-                first = false;
-            else
-                result.append("&");
-
-            result.append(URLEncoder.encode(key, "UTF-8"));
-            result.append("=");
-            result.append(URLEncoder.encode(value.toString(), "UTF-8"));
-
-        }
-        return result.toString();
-    }
+//    public String getPostDataString(JSONObject params) throws Exception {
+//
+//        StringBuilder result = new StringBuilder();
+//        boolean first = true;
+//
+//        Iterator<String> itr = params.keys();
+//
+//        while(itr.hasNext()){
+//
+//            String key= itr.next();
+//            Object value = params.get(key);
+//
+//            if (first)
+//                first = false;
+//            else
+//                result.append("&");
+//
+//            result.append(URLEncoder.encode(key, "UTF-8"));
+//            result.append("=");
+//            result.append(URLEncoder.encode(value.toString(), "UTF-8"));
+//
+//        }
+//        return result.toString();
+//    }
 }

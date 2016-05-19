@@ -9,6 +9,12 @@ public class RecordAction {
     private String mDuration;
     private Boolean mStatus;
 
+    public RecordAction(int mIdAction, String mDuration) {
+        this.mIdAction = mIdAction;
+        this.mDuration = mDuration;
+        this.mStatus = false;
+    }
+
     public int getmIdAction() {
         return mIdAction;
     }

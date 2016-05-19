@@ -22,7 +22,10 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,8 +36,7 @@ public class ListViewBarChartActivity extends DemoBase {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_listview_chart);
 
         ListView lv = (ListView) findViewById(R.id.listView1);
@@ -42,7 +44,7 @@ public class ListViewBarChartActivity extends DemoBase {
         ArrayList<BarData> list = new ArrayList<BarData>();
 
         // 20 items
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 3; i++) {
             list.add(generateData(i + 1));
         }
 
@@ -127,37 +129,67 @@ public class ListViewBarChartActivity extends DemoBase {
 
         ArrayList<BarEntry> entries = new ArrayList<BarEntry>();
 
-        for (int i = 0; i < 12; i++) {
+        for (int i = 0; i < 6; i++) {
             entries.add(new BarEntry((int) (Math.random() * 70) + 30, i));
+           // entries.add(new BarEntry(30, i));
         }
 
-        BarDataSet d = new BarDataSet(entries, "New DataSet " + cnt);
-        d.setBarSpacePercent(20f);
-        d.setColors(ColorTemplate.VORDIPLOM_COLORS);
-        d.setBarShadowColor(Color.rgb(203, 203, 203));
-
+        int[] colornek1 = {Color.rgb(255, 140, 157)};
+        int[] colornek2 = {Color.rgb(255, 140, 157)};
+        int[] colornek3 = {Color.rgb(255, 140, 157)};
         ArrayList<IBarDataSet> sets = new ArrayList<IBarDataSet>();
-        sets.add(d);
+        BarDataSet d;
+        switch (cnt){
+            case 1:
+                //BarDataSet d = new BarDataSet(entries, "New DataSet " + cnt);
+                d = new BarDataSet(entries, "Nhiệt độ");
+                d.setBarSpacePercent(50f);
+                d.setColors(colornek1);
+                //d.setColors(ColorTemplate.VORDIPLOM_COLORS);
+                d.setBarShadowColor(Color.rgb(203, 203, 203));
+
+                sets.add(d);
+                break;
+            case 2:
+
+                //BarDataSet d = new BarDataSet(entries, "New DataSet " + cnt);
+                d = new BarDataSet(entries, "Nhiệt độ");
+                d.setBarSpacePercent(50f);
+                d.setColors(colornek2);
+                //d.setColors(ColorTemplate.VORDIPLOM_COLORS);
+                d.setBarShadowColor(Color.rgb(203, 203, 203));
+
+                sets.add(d);
+                break;
+            case 3:
+                //BarDataSet d = new BarDataSet(entries, "New DataSet " + cnt);
+                d = new BarDataSet(entries, "Nhiệt độ");
+                d.setBarSpacePercent(50f);
+                d.setColors(colornek3);
+                //d.setColors(ColorTemplate.VORDIPLOM_COLORS);
+                d.setBarShadowColor(Color.rgb(203, 203, 203));
+
+                sets.add(d);
+                break;
+        }
+
+
 
         BarData cd = new BarData(getMonths(), sets);
         return cd;
     }
 
     private ArrayList<String> getMonths() {
+        Calendar c = Calendar.getInstance();
+        int currentHour24 = c.get(Calendar.HOUR_OF_DAY);
 
         ArrayList<String> m = new ArrayList<String>();
-        m.add("Jan");
-        m.add("Feb");
-        m.add("Mar");
-        m.add("Apr");
-        m.add("May");
-        m.add("Jun");
-        m.add("Jul");
-        m.add("Aug");
-        m.add("Sep");
-        m.add("Okt");
-        m.add("Nov");
-        m.add("Dec");
+        m.add(String.valueOf(currentHour24-10)+"g");
+        m.add(String.valueOf(currentHour24-8)+"g");
+        m.add(String.valueOf(currentHour24-6)+"g");
+        m.add(String.valueOf(currentHour24-4)+"g");
+        m.add(String.valueOf(currentHour24-2)+"g");
+        m.add(String.valueOf(currentHour24)+"g");
 
         return m;
     }

@@ -4,6 +4,7 @@ package com.aliens.smartgarden.Chart;
  * Created by Duy on 17-May-16.
  */
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import com.aliens.smartgarden.R;
 
@@ -13,7 +14,7 @@ import com.aliens.smartgarden.R;
  *
  * @author Philipp Jahoda
  */
-public abstract class DemoBase extends FragmentActivity {
+public abstract class DemoBase extends AppCompatActivity {
 
     protected String[] mMonths = new String[] {
             "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"

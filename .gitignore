@@ -46,3 +46,6 @@ captures/
 *.swp
 .idea/modules.xml
 .idea/libraries/support_vector_drawable_23_3_0.xml
+.idea/gradle.xml
+.idea/libraries/design_23_3_0.xml
+.idea/libraries/support_v4_23_3_0.xml

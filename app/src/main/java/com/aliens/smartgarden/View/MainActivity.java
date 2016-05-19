@@ -4,18 +4,19 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -31,6 +32,14 @@ import com.aliens.smartgarden.Service.RecordActionService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+import microsoft.aspnet.signalr.client.Platform;
+import microsoft.aspnet.signalr.client.SignalRFuture;
+import microsoft.aspnet.signalr.client.http.android.AndroidPlatformComponent;
+import microsoft.aspnet.signalr.client.hubs.HubConnection;
+import microsoft.aspnet.signalr.client.hubs.HubProxy;
+import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -40,6 +49,7 @@ public class MainActivity extends AppCompatActivity
     GlobalVariable globalVariable;
     RecordAction recordAction;
     TextView nhietDoTxt, doAmTxt;
+    Handler handlerSituation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +90,56 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         assert navigationView != null;
         navigationView.setNavigationItemSelectedListener(this);
+
+        /**
+         * Push Notification
+         */
+        Platform.loadPlatformComponent(new AndroidPlatformComponent());
+
+        String host = "http://aligarapi.apphb.com/";
+        HubConnection connection = new HubConnection(host);
+
+        HubProxy hub = connection.createHubProxy("MyHub");
+
+        SignalRFuture<Void> awaitConnection = connection.start();
+        try {
+            awaitConnection.get();
+        } catch (InterruptedException e) {
+            // Handle ...
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            // Handle ...
+            e.printStackTrace();
+        }
+        handlerSituation = new Handler();
+        hub.subscribe(this);
+
+        hub.on("notifyNewSituation", new SubscriptionHandler1<String>() {
+            @Override
+            public void run(String msg) {
+                //Log.d("result := ", msg);
+                String[] separated = msg.split("=");
+                final String fStatusTem = separated[0];
+                final String fStatusHum = separated[1];
+                Log.i("=======Notify", msg);
+                handlerSituation.post( new Runnable() {
+                    @Override
+                    public void run() {
+                        nhietDoTxt.setText(String.valueOf(Integer.parseInt(fStatusTem)));
+                        doAmTxt.setText(String.valueOf(Integer.parseInt(fStatusHum)));
+                    }
+                } );
+            }
+        }, String.class);
+
+        hub.on("notifyNew", new SubscriptionHandler1<String>() {
+            @Override
+            public void run(String msg) {
+                //Log.d("result := ", msg);
+                Log.i("=======Notify", msg);
+            }
+        }, String.class);
+
     }
 
     @Override

@@ -13,7 +13,7 @@ public class RecordSituationService {
     private static String BASE_URL = "http://aligarapi.apphb.com/api/recordsituation";
 
     public String getLastestSituation() {
-        String url = BASE_URL + "/all";
+        String url = BASE_URL + "/lastest";
 
         return getSituationData(url);
     }

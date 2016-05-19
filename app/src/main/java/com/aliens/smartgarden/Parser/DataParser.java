@@ -25,15 +25,15 @@ public class DataParser {
         rs.setHumidity(getFloat("Humidity", jObj));
         rs.setLight(getFloat("Light", jObj));
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); //Thay đổi về sau
-        Date date;
-        try {
-            date = format.parse(getString("RecordTime", jObj));
-            rs.setRecordTime(date);
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); //Thay đổi về sau
+//        Date date;
+//        try {
+//            date = format.parse(getString("RecordTime", jObj));
+//            rs.setRecordTime(date);
+//        } catch (ParseException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
         return rs;
     }
 

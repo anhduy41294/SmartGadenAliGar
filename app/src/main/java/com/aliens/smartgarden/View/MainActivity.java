@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -57,6 +58,9 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
+
+        RecordSituationAsyncTask recordSituationAsyncTask = new RecordSituationAsyncTask();
+        recordSituationAsyncTask.execute();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         assert drawer != null;
@@ -188,15 +192,11 @@ public class MainActivity extends AppCompatActivity
      * AsyncTask
      */
     public class RecordSituationAsyncTask extends AsyncTask<String, Void, RecordSituation> {
-        View view;
 
         ProgressDialog progressDialog;
 
-        public RecordSituationAsyncTask(View view) {
-            this.view = view;
-            progressDialog = new ProgressDialog(view.getContext());
-            progressDialog.setTitle("Loading");
-            progressDialog.show();
+        public RecordSituationAsyncTask() {
+
         }
 
         @Override
@@ -216,8 +216,8 @@ public class MainActivity extends AppCompatActivity
             super.onPostExecute(o);
 
             //Set value to UI
+            Log.d("server:", Float.toString(o.getHumidity()));
 
-            progressDialog.dismiss();
         }
     }
 

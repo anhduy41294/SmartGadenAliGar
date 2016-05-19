@@ -44,3 +44,5 @@ captures/
 *.ipr
 *~
 *.swp
+.idea/modules.xml
+.idea/libraries/support_vector_drawable_23_3_0.xml

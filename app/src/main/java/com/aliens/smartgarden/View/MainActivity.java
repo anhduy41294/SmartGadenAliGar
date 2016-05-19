@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.aliens.smartgarden.Chart.ListViewBarChartActivity;
 import com.aliens.smartgarden.Controller.LoaderHelper;
 import com.aliens.smartgarden.Global.GlobalVariable;
+import com.aliens.smartgarden.Model.Device;
 import com.aliens.smartgarden.Model.RecordAction;
 import com.aliens.smartgarden.Model.RecordSituation;
 import com.aliens.smartgarden.R;
@@ -75,6 +76,8 @@ public class MainActivity extends AppCompatActivity
 
         RecordSituationAsyncTask recordSituationAsyncTask = new RecordSituationAsyncTask();
         recordSituationAsyncTask.execute();
+        RecordSituationDeviceAsyncTask recordSituationDeviceAsyncTask = new RecordSituationDeviceAsyncTask();
+        recordSituationDeviceAsyncTask.execute();
 
 //        recordAction = new RecordAction(3, "40");
 //        SendRecordAction sendRecordAction = new SendRecordAction();
@@ -261,8 +264,6 @@ public class MainActivity extends AppCompatActivity
      */
     public class RecordSituationAsyncTask extends AsyncTask<String, Void, RecordSituation> {
 
-        ProgressDialog progressDialog;
-
         public RecordSituationAsyncTask() {
 
         }
@@ -313,6 +314,38 @@ public class MainActivity extends AppCompatActivity
         protected void onPostExecute(String respond) {
             super.onPostExecute(respond);
 
+        }
+    }
+
+    /**
+     * AsyncTask
+     */
+    public class RecordSituationDeviceAsyncTask extends AsyncTask<String, Void, ArrayList<Device>> {
+
+        public RecordSituationDeviceAsyncTask() {
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected ArrayList<Device> doInBackground(String... params) {
+
+            LoaderHelper loaderHelper = new LoaderHelper();
+            return loaderHelper.getAllDeviceStatus();
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Device> devices) {
+            super.onPostExecute(devices);
+
+            //Set value to UI
+
+            tuoinuocBtn.setText(devices.get(0).isDeviceStatus()?"Tưới nước : ON" : "Tưới nước : OFF");
+            maiCheBtn.setText(devices.get(1).isDeviceStatus()?"Mái che : ON" : "Mái che : OFF");
         }
     }
 

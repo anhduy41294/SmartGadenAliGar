@@ -127,22 +127,26 @@ public class ListViewBarChartActivity extends DemoBase {
      */
     private BarData generateData(int cnt) {
 
-        ArrayList<BarEntry> entries = new ArrayList<BarEntry>();
+        ArrayList<BarEntry> entries1 = new ArrayList<BarEntry>();
+        ArrayList<BarEntry> entries2 = new ArrayList<BarEntry>();
+        ArrayList<BarEntry> entries3 = new ArrayList<BarEntry>();
 
         for (int i = 0; i < 6; i++) {
-            entries.add(new BarEntry((int) (Math.random() * 70) + 30, i));
-           // entries.add(new BarEntry(30, i));
+            entries1.add(new BarEntry((int) (Math.random() * 70), i));
+            entries2.add(new BarEntry((int) (Math.random() * 70) + 30, i));
+            entries3.add(new BarEntry((int) (Math.random() * 70) + 30, i));
+
         }
 
-        int[] colornek1 = {Color.rgb(255, 140, 157)};
-        int[] colornek2 = {Color.rgb(255, 140, 157)};
-        int[] colornek3 = {Color.rgb(255, 140, 157)};
+        int[] colornek1 = {Color.rgb(255,0,0)};
+        int[] colornek2 = {Color.rgb(0,191,255)};
+        int[] colornek3 = {Color.rgb(255,255,0)};
         ArrayList<IBarDataSet> sets = new ArrayList<IBarDataSet>();
         BarDataSet d;
         switch (cnt){
             case 1:
                 //BarDataSet d = new BarDataSet(entries, "New DataSet " + cnt);
-                d = new BarDataSet(entries, "Nhiệt độ");
+                d = new BarDataSet(entries1, "Nhiệt độ");
                 d.setBarSpacePercent(50f);
                 d.setColors(colornek1);
                 //d.setColors(ColorTemplate.VORDIPLOM_COLORS);
@@ -153,7 +157,7 @@ public class ListViewBarChartActivity extends DemoBase {
             case 2:
 
                 //BarDataSet d = new BarDataSet(entries, "New DataSet " + cnt);
-                d = new BarDataSet(entries, "Nhiệt độ");
+                d = new BarDataSet(entries2, "Độ ẩm");
                 d.setBarSpacePercent(50f);
                 d.setColors(colornek2);
                 //d.setColors(ColorTemplate.VORDIPLOM_COLORS);
@@ -163,7 +167,7 @@ public class ListViewBarChartActivity extends DemoBase {
                 break;
             case 3:
                 //BarDataSet d = new BarDataSet(entries, "New DataSet " + cnt);
-                d = new BarDataSet(entries, "Nhiệt độ");
+                d = new BarDataSet(entries3, "Ánh sáng");
                 d.setBarSpacePercent(50f);
                 d.setColors(colornek3);
                 //d.setColors(ColorTemplate.VORDIPLOM_COLORS);

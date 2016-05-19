@@ -1,5 +1,6 @@
 package com.aliens.smartgarden.Parser;
 
+import com.aliens.smartgarden.Model.Device;
 import com.aliens.smartgarden.Model.RecordSituation;
 
 import org.json.JSONArray;
@@ -8,7 +9,9 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by 12120 on 5/16/2016.
@@ -34,6 +37,25 @@ public class DataParser {
 //            // TODO Auto-generated catch block
 //            e.printStackTrace();
 //        }
+        return rs;
+    }
+
+    public static ArrayList<Device> parseAllDeviceStatus(String data) throws JSONException {
+        ArrayList<Device> rs = new ArrayList<Device>();
+
+        //JSONObject jObj = new JSONObject(data);
+        JSONArray jArr = new JSONArray(data);
+
+        for (int i = 0; i < jArr.length(); i++)
+        {
+            Device temp = new Device();
+            JSONObject jObj = jArr.getJSONObject(i);
+            temp.setIdDevice(jObj.getInt("IdDevice"));
+            temp.setDeviceStatus(jObj.getBoolean("DeviceStatus"));
+            temp.setDeviceName(jObj.getString("DeviceName"));
+
+            rs.add(temp);
+        }
         return rs;
     }
 

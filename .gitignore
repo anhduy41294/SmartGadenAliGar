@@ -49,3 +49,5 @@ captures/
 .idea/gradle.xml
 .idea/libraries/design_23_3_0.xml
 .idea/libraries/support_v4_23_3_0.xml
+.idea/compiler.xml
+.idea/encodings.xml

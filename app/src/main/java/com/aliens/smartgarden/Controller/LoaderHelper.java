@@ -1,9 +1,11 @@
 package com.aliens.smartgarden.Controller;
 
 import com.aliens.smartgarden.Model.Device;
+import com.aliens.smartgarden.Model.Profile;
 import com.aliens.smartgarden.Model.RecordSituation;
 import com.aliens.smartgarden.Parser.DataParser;
 import com.aliens.smartgarden.Service.DeviceService;
+import com.aliens.smartgarden.Service.ProfileService;
 import com.aliens.smartgarden.Service.RecordSituationService;
 
 import org.json.JSONException;
@@ -20,6 +22,17 @@ public class LoaderHelper {
         String data = recordSituationService.getLastestSituation();
         try {
             return DataParser.parseLastestSituation(data);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return  null;
+    }
+
+    public Profile getProfileDetail(int id){
+        ProfileService profileService = new ProfileService();
+        String data = profileService.getProfileDetail(id);
+        try {
+            return DataParser.parseProfileDetail(data);
         } catch (JSONException e) {
             e.printStackTrace();
         }

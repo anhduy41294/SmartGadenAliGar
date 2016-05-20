@@ -1,6 +1,7 @@
 package com.aliens.smartgarden.Parser;
 
 import com.aliens.smartgarden.Model.Device;
+import com.aliens.smartgarden.Model.Profile;
 import com.aliens.smartgarden.Model.RecordSituation;
 
 import org.json.JSONArray;
@@ -39,7 +40,20 @@ public class DataParser {
 //        }
         return rs;
     }
+    public static Profile parseProfileDetail(String data) throws JSONException {
+        Profile rs = new Profile();
 
+        JSONObject jObj = new JSONObject(data);
+
+        rs.setIdProfile(getInt("IdProfile", jObj));
+        rs.setProfileName(getString("ProfileName", jObj));
+        rs.setTemperatureStandard(getFloat("TemperatureStandard", jObj));
+        rs.setHumidityStandard(getFloat("HumidityStandard", jObj));
+        rs.setLightStandard(getFloat("LightStandard", jObj));
+        rs.setDuaration(getFloat("WaterDuration", jObj));
+
+        return rs;
+    }
     public static ArrayList<Device> parseAllDeviceStatus(String data) throws JSONException {
         ArrayList<Device> rs = new ArrayList<Device>();
 

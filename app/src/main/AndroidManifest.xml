@@ -21,8 +21,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".Chart.ListViewBarChartActivity" />
-        <activity android:name=".View.AddProfileActivity">
-        </activity>
+        <activity android:name=".View.AddProfileActivity"></activity>
+        <activity android:name=".View.EditProfileActivity"></activity>
     </application>
 
 </manifest>

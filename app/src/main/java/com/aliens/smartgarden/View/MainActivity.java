@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity
     RecordAction recordAction;
     TextView nhietDoTxt, doAmTxt;
     Handler handlerSituation;
+    ImageButton imgEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +145,16 @@ public class MainActivity extends AppCompatActivity
             }
         }, String.class);
 
+        //Test
+        imgEdit = (ImageButton) findViewById(R.id.imgEditProfile);
+        imgEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplication(), EditProfileActivity.class);
+                i.putExtra("IdProfile", 2);
+                startActivity(i);
+            }
+        });
     }
 
     @Override

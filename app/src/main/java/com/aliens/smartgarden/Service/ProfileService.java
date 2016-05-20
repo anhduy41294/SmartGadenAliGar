@@ -27,6 +27,11 @@ public class ProfileService {
 
         return getProfileData(url);
     }
+    public String getProfileDetail(int id ) {
+        String url = BASE_URL + "/detail?id=" + id;
+
+        return getProfileData(url);
+    }
 
     /**
      * GET METHOD
@@ -73,6 +78,49 @@ public class ProfileService {
             URL url = new URL(stringUrl); // here is your URL path
 
             JSONObject postDataParams = new JSONObject();
+            postDataParams.put("ProfileName", profile.getProfileName());
+            postDataParams.put("TemperatureStandard", profile.getTemperatureStandard());
+            postDataParams.put("LightStandard", 0);
+            postDataParams.put("HumidityStandard", profile.getHumidityStandard());
+            postDataParams.put("WaterDuration", profile.getDuaration());
+            postDataParams.put("Status", "false");
+
+            Log.e("params",postDataParams.toString());
+
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setReadTimeout(15000 /* milliseconds */);
+            conn.setConnectTimeout(15000 /* milliseconds */);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            conn.setDoInput(true);
+            conn.setDoOutput(true);
+
+            OutputStream os = conn.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+            writer.write(postDataParams.toString());
+
+            writer.flush();
+            writer.close();
+            os.close();
+
+            int responseCode = conn.getResponseCode();
+            return Integer.toString(responseCode);
+
+        }
+        catch(Exception e){
+            return null;
+        }
+
+    }
+
+    public String postUpdateProfile(Profile profile) {
+        String stringUrl = BASE_URL + "/update";
+        try {
+
+            URL url = new URL(stringUrl); // here is your URL path
+
+            JSONObject postDataParams = new JSONObject();
+            postDataParams.put("IdProfile", profile.getIdProfile());
             postDataParams.put("ProfileName", profile.getProfileName());
             postDataParams.put("TemperatureStandard", profile.getTemperatureStandard());
             postDataParams.put("LightStandard", 0);

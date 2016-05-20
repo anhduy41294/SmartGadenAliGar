@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context=".View.EditProfileActivity">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="SỬA HỒ SƠ"
+            android:textColor="@color/colorPrimary"
+            android:textSize="40dp" />
+
+        <com.github.florent37.materialtextfield.MaterialTextField
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mtf_image="@drawable/ic_menu_send"
+            app:mtf_labelColor="@color/black">
+
+            <EditText
+                android:id="@+id/edtProfileNameEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Tên hồ sơ"
+                android:textSize="20sp" />
+        </com.github.florent37.materialtextfield.MaterialTextField>
+
+        <com.github.florent37.materialtextfield.MaterialTextField
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mtf_image="@drawable/ic_menu_send"
+            app:mtf_labelColor="@color/black">
+
+            <EditText
+                android:id="@+id/edtTemperatureEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nhiệt độ"
+                android:inputType="number"
+                android:textSize="20sp" />
+        </com.github.florent37.materialtextfield.MaterialTextField>
+
+        <com.github.florent37.materialtextfield.MaterialTextField
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mtf_image="@drawable/ic_menu_send"
+            app:mtf_labelColor="@color/black">
+
+            <EditText
+                android:id="@+id/edtDurationEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Thời lượng tưới"
+                android:inputType="number"
+                android:textSize="20sp" />
+        </com.github.florent37.materialtextfield.MaterialTextField>
+
+        <com.github.florent37.materialtextfield.MaterialTextField
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mtf_image="@drawable/ic_menu_send"
+            app:mtf_labelColor="@color/black">
+
+            <EditText
+                android:id="@+id/edtHumidityEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Độ ẩm"
+                android:inputType="number"
+                android:textSize="20sp" />
+        </com.github.florent37.materialtextfield.MaterialTextField>
+
+
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabSaveEdit"
+        android:layout_gravity="bottom|end"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:layout_width="wrap_content"
+        android:src="@android:drawable/ic_menu_save" />
+</android.support.design.widget.CoordinatorLayout>

@@ -3,7 +3,6 @@ package com.aliens.smartgarden.Service;
 import android.util.Log;
 
 import com.aliens.smartgarden.Model.Profile;
-import com.aliens.smartgarden.Model.RecordAction;
 
 import org.json.JSONObject;
 
@@ -82,7 +81,7 @@ public class ProfileService {
             postDataParams.put("TemperatureStandard", profile.getTemperatureStandard());
             postDataParams.put("LightStandard", 0);
             postDataParams.put("HumidityStandard", profile.getHumidityStandard());
-            postDataParams.put("WaterDuration", profile.getDuaration());
+            postDataParams.put("WaterDuration", profile.getDuration());
             postDataParams.put("Status", "false");
 
             Log.e("params",postDataParams.toString());
@@ -125,7 +124,7 @@ public class ProfileService {
             postDataParams.put("TemperatureStandard", profile.getTemperatureStandard());
             postDataParams.put("LightStandard", 0);
             postDataParams.put("HumidityStandard", profile.getHumidityStandard());
-            postDataParams.put("WaterDuration", profile.getDuaration());
+            postDataParams.put("WaterDuration", profile.getDuration());
             postDataParams.put("Status", "false");
 
             Log.e("params",postDataParams.toString());

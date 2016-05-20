@@ -8,11 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created by 12120 on 5/16/2016.
@@ -50,7 +46,7 @@ public class DataParser {
         rs.setTemperatureStandard(getFloat("TemperatureStandard", jObj));
         rs.setHumidityStandard(getFloat("HumidityStandard", jObj));
         rs.setLightStandard(getFloat("LightStandard", jObj));
-        rs.setDuaration(getFloat("WaterDuration", jObj));
+        rs.setDuration(getFloat("WaterDuration", jObj));
 
         return rs;
     }
@@ -73,6 +69,27 @@ public class DataParser {
         return rs;
     }
 
+    public static ArrayList<Profile> parseAllProfile(String data) throws JSONException {
+        ArrayList<Profile> rs = new ArrayList<Profile>();
+
+        JSONArray jArr = new JSONArray(data);
+
+        for (int i = 0; i < jArr.length(); i++)
+        {
+            Profile temp = new Profile();
+            JSONObject jObj = jArr.getJSONObject(i);
+            temp.setIdProfile(jObj.getInt("IdProfile"));
+            temp.setProfileName(jObj.getString("ProfileName"));
+            temp.setTemperatureStandard((float)jObj.getDouble("TemperatureStandard"));
+            temp.setHumidityStandard((float)jObj.getDouble("HumidityStandard"));
+            temp.setDuration((float)jObj.getDouble("WaterDuration"));
+            temp.setLightStandard((float)jObj.getDouble("LightStandard"));
+            temp.setStatus(jObj.getBoolean("Status"));
+
+            rs.add(temp);
+        }
+        return rs;
+    }
 
     private static JSONObject getObject(String tagName, JSONObject jObj)  throws JSONException {
         JSONObject subObj = jObj.getJSONObject(tagName);

@@ -38,7 +38,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 mProfile.setProfileName(edtProfileName.getText().toString());
                 mProfile.setTemperatureStandard(Float.parseFloat(edtTemperature.getText().toString()));
                 mProfile.setHumidityStandard(Float.parseFloat(edtHumidity.getText().toString()));
-                mProfile.setDuaration(Float.parseFloat(edtDuration.getText().toString()));
+                mProfile.setDuration(Float.parseFloat(edtDuration.getText().toString()));
                 mProfile.setLightStandard(0);
                 mProfile.setIdProfile(idProfile);
 
@@ -86,7 +86,7 @@ public class EditProfileActivity extends AppCompatActivity {
             super.onPostExecute(profile);
 
             edtProfileName.setText(profile.getProfileName());
-            edtDuration.setText(String.valueOf(profile.getDuaration()));
+            edtDuration.setText(String.valueOf(profile.getDuration()));
             edtTemperature.setText(String.valueOf(profile.getTemperatureStandard()));
             edtHumidity.setText(String.valueOf(profile.getHumidityStandard()));
         }

@@ -11,7 +11,6 @@ import android.widget.EditText;
 import com.aliens.smartgarden.Model.Profile;
 import com.aliens.smartgarden.R;
 import com.aliens.smartgarden.Service.ProfileService;
-import com.aliens.smartgarden.Service.RecordActionService;
 
 public class AddProfileActivity extends AppCompatActivity {
 
@@ -38,7 +37,7 @@ public class AddProfileActivity extends AppCompatActivity {
                 mProfile.setProfileName(edtProfileName.getText().toString());
                 mProfile.setTemperatureStandard(Float.parseFloat(edtTemperature.getText().toString()));
                 mProfile.setHumidityStandard(Float.parseFloat(edtHumidity.getText().toString()));
-                mProfile.setDuaration(Float.parseFloat(edtDuration.getText().toString()));
+                mProfile.setDuration(Float.parseFloat(edtDuration.getText().toString()));
                 mProfile.setLightStandard(0);
 
                 PostProfile postProfile = new PostProfile();

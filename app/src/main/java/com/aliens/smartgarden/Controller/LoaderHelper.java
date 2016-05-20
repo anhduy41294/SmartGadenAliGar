@@ -49,4 +49,15 @@ public class LoaderHelper {
         }
         return  null;
     }
+
+    public ArrayList<Profile> getAllProfile(){
+        ProfileService profileService = new ProfileService();
+        String data = profileService.getAllProfile();
+        try {
+            return DataParser.parseAllProfile(data);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return  null;
+    }
 }

@@ -9,16 +9,25 @@ public class Profile {
     private float mTemperatureStandard;
     private float mHumidityStandard;
     private float mLightStandard;
+    private boolean mStatus;
 
-    public float getDuaration() {
-        return mDuaration;
+    public boolean isStatus() {
+        return mStatus;
     }
 
-    public void setDuaration(float mDuaration) {
-        this.mDuaration = mDuaration;
+    public void setStatus(boolean mStatus) {
+        this.mStatus = mStatus;
     }
 
-    private float mDuaration;
+    public float getDuration() {
+        return mDuration;
+    }
+
+    public void setDuration(float mDuration) {
+        this.mDuration = mDuration;
+    }
+
+    private float mDuration;
 
     public Profile() {
     }

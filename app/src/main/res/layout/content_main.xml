@@ -118,7 +118,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="110dp"
                 android:orientation="vertical"
                 android:padding="8dp">
 
@@ -143,6 +143,7 @@
                         android:padding="8dp" />
 
                     <ImageButton
+                        android:id="@+id/imgEditProfile"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -150,7 +151,6 @@
                         android:src="@drawable/edit" />
 
                     <ImageButton
-                        android:id="@+id/imgEditProfile"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -158,11 +158,24 @@
                         android:src="@drawable/create" />
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Trạng thái của các thiết bị"
-                    android:textColor="@color/black"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimaryDark" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trạng thái của các thiết bị"
+                android:textColor="@color/colorPrimaryDark" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="8dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -175,15 +188,18 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Máy tưới nước"
-                        android:textAlignment="center" />
+                        android:textAlignment="center"
+                        android:textColor="@color/black"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Màn che"
-                        android:textAlignment="center" />
+                        android:textAlignment="center"
+                        android:textColor="@color/black"/>
                 </LinearLayout>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -212,6 +228,7 @@
                         android:textSize="60dp" />
                 </LinearLayout>
             </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

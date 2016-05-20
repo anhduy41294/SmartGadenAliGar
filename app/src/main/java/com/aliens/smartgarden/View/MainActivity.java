@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity
     Button tuoinuocBtn, maiCheBtn;
     GlobalVariable globalVariable;
     RecordAction recordAction;
-    TextView nhietDoTxt, doAmTxt;
+    TextView nhietDoTxt, doAmTxt, mayTuoiNuocStatus, manCheStatus;
     Handler handlerSituation;
     ImageButton imgEdit;
 
@@ -64,17 +64,11 @@ public class MainActivity extends AppCompatActivity
         globalVariable = new GlobalVariable();
         setUpSpinner();
         setUpButton();
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        assert fab != null;
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
+
         nhietDoTxt = (TextView) findViewById(R.id.txtTemperature);
         doAmTxt = (TextView) findViewById(R.id.txtHumidity);
+        mayTuoiNuocStatus = (TextView) findViewById(R.id.mayTuoiNuocStatus);
+        manCheStatus = (TextView) findViewById(R.id.manCheStatus);
 
         RecordSituationAsyncTask recordSituationAsyncTask = new RecordSituationAsyncTask();
         recordSituationAsyncTask.execute();
@@ -249,10 +243,12 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 if (globalVariable.isTuoiNuoc) {
                     globalVariable.isTuoiNuoc = false;
-                    tuoinuocBtn.setText("Tưới nước : OFF");
+                    tuoinuocBtn.setText("Tắt tưới nước");
+                    mayTuoiNuocStatus.setText("Mở");
                 } else {
                     globalVariable.isTuoiNuoc = true;
-                    tuoinuocBtn.setText("Tưới nước : ON");
+                    tuoinuocBtn.setText("Mở Tưới nước");
+                    mayTuoiNuocStatus.setText("Tắt");
                 }
             }
         });
@@ -262,10 +258,12 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 if (globalVariable.isManChe) {
                     globalVariable.isManChe = false;
-                    maiCheBtn.setText("Mái che : OFF");
+                    maiCheBtn.setText("Tắt mái che");
+                    manCheStatus.setText("Mở");
                 } else {
                     globalVariable.isManChe = true;
-                    maiCheBtn.setText("Mái che : ON");
+                    maiCheBtn.setText("Mở mái che");
+                    manCheStatus.setText("Tắt");
                 }
             }
         });
@@ -355,9 +353,10 @@ public class MainActivity extends AppCompatActivity
             super.onPostExecute(devices);
 
             //Set value to UI
-
-            tuoinuocBtn.setText(devices.get(0).isDeviceStatus()?"Tưới nước : ON" : "Tưới nước : OFF");
-            maiCheBtn.setText(devices.get(1).isDeviceStatus()?"Mái che : ON" : "Mái che : OFF");
+            tuoinuocBtn.setText(devices.get(0).isDeviceStatus()?"Tắt tưới nước" : "Mở tưới nước");
+            maiCheBtn.setText(devices.get(1).isDeviceStatus()?"Tắt mái che" : "Mở mái che");
+            mayTuoiNuocStatus.setText(devices.get(0).isDeviceStatus()?"Mở" : "Tắt");
+            manCheStatus.setText(devices.get(1).isDeviceStatus()?"Mở" : "Tắt");
         }
     }
 

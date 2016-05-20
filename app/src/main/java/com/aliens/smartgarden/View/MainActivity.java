@@ -1,16 +1,16 @@
 package com.aliens.smartgarden.View;
 
-import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aliens.smartgarden.Chart.ListViewBarChartActivity;
 import com.aliens.smartgarden.Controller.LoaderHelper;
@@ -36,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import biz.kasual.materialnumberpicker.MaterialNumberPicker;
 import microsoft.aspnet.signalr.client.Platform;
 import microsoft.aspnet.signalr.client.SignalRFuture;
 import microsoft.aspnet.signalr.client.http.android.AndroidPlatformComponent;
@@ -53,6 +55,8 @@ public class MainActivity extends AppCompatActivity
     TextView nhietDoTxt, doAmTxt, mayTuoiNuocStatus, manCheStatus;
     Handler handlerSituation;
     ImageButton imgEdit;
+    MaterialNumberPicker numberPicker;
+    AlertDialog.Builder alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +66,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         globalVariable = new GlobalVariable();
+        setUpTuoiNuocDialog();
         setUpSpinner();
         setUpButton();
 
@@ -149,6 +154,30 @@ public class MainActivity extends AppCompatActivity
                 startActivity(i);
             }
         });
+    }
+
+    private void setUpTuoiNuocDialog() {
+         numberPicker = new MaterialNumberPicker.Builder(getApplicationContext())
+                .minValue(1)
+                .maxValue(20)
+                .defaultValue(10)
+                .backgroundColor(Color.WHITE)
+                .separatorColor(Color.TRANSPARENT)
+                .textColor(Color.BLACK)
+                .textSize(20)
+                .enableFocusability(false)
+                .wrapSelectorWheel(true)
+                .build();
+
+        alertDialog = new AlertDialog.Builder(this)
+                .setTitle("Thời gian tưới nước (phút):")
+                .setView(numberPicker)
+                .setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(), String.valueOf(numberPicker.getValue()), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     @Override
@@ -243,11 +272,12 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 if (globalVariable.isTuoiNuoc) {
                     globalVariable.isTuoiNuoc = false;
-                    tuoinuocBtn.setText("Tắt tưới nước");
+                    tuoinuocBtn.setText("Mở tưới nước");
                     mayTuoiNuocStatus.setText("Mở");
                 } else {
+                    alertDialog.show();
                     globalVariable.isTuoiNuoc = true;
-                    tuoinuocBtn.setText("Mở Tưới nước");
+                    tuoinuocBtn.setText("Tắt Tưới nước");
                     mayTuoiNuocStatus.setText("Tắt");
                 }
             }
@@ -353,6 +383,8 @@ public class MainActivity extends AppCompatActivity
             super.onPostExecute(devices);
 
             //Set value to UI
+            globalVariable.isTuoiNuoc = devices.get(0).isDeviceStatus();
+            globalVariable.isManChe = devices.get(1).isDeviceStatus();
             tuoinuocBtn.setText(devices.get(0).isDeviceStatus()?"Tắt tưới nước" : "Mở tưới nước");
             maiCheBtn.setText(devices.get(1).isDeviceStatus()?"Tắt mái che" : "Mở mái che");
             mayTuoiNuocStatus.setText(devices.get(0).isDeviceStatus()?"Mở" : "Tắt");

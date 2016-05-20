@@ -33,4 +33,5 @@ dependencies {
     compile 'com.android.support:design:23.3.0'
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.4'
     compile 'com.github.florent37:materialtextfield:1.0.4'
+    compile 'biz.kasual:materialnumberpicker:1.2.1'
 }

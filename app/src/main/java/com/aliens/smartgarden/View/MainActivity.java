@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity
     RecordAction recordAction;
     TextView nhietDoTxt, doAmTxt, mayTuoiNuocStatus, manCheStatus;
     Handler handlerSituation;
+    Handler handlerDevice;
     ImageButton imgEdit;
     MaterialNumberPicker numberPicker;
     AlertDialog.Builder alertDialog;
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity
         RecordSituationDeviceAsyncTask recordSituationDeviceAsyncTask = new RecordSituationDeviceAsyncTask();
         recordSituationDeviceAsyncTask.execute();
 
-//        recordAction = new RecordAction(3, "40");
+//        recordAction = new RecordAction(1, "20");
 //        SendRecordAction sendRecordAction = new SendRecordAction();
 //        sendRecordAction.execute();
 
@@ -116,6 +117,7 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
         handlerSituation = new Handler();
+        handlerDevice = new Handler();
         hub.subscribe(this);
 
         hub.on("notifyNewSituation", new SubscriptionHandler1<String>() {
@@ -123,14 +125,14 @@ public class MainActivity extends AppCompatActivity
             public void run(String msg) {
                 //Log.d("result := ", msg);
                 String[] separated = msg.split("=");
-                final String fStatusTem = separated[0];
-                final String fStatusHum = separated[1];
+                final String fStatusTem = separated[0].substring(0, 2);
+                final String fStatusHum = separated[1].substring(0, 2);
                 Log.i("=======Notify", msg);
                 handlerSituation.post( new Runnable() {
                     @Override
                     public void run() {
-                        nhietDoTxt.setText(String.valueOf(Integer.parseInt(fStatusTem)));
-                        doAmTxt.setText(String.valueOf(Integer.parseInt(fStatusHum)));
+                        nhietDoTxt.setText(fStatusTem);
+                        doAmTxt.setText(fStatusHum);
                     }
                 } );
             }
@@ -144,6 +146,44 @@ public class MainActivity extends AppCompatActivity
             }
         }, String.class);
 
+        hub.on("notifyNewDeviceStatus", new SubscriptionHandler1<String>() {
+            @Override
+            public void run(String msg) {
+                //Log.d("result := ", msg);
+                String[] separated = msg.split("=");
+                final String fDevice = separated[0];
+                final String fStatus = separated[1];
+                Log.i("=======Notify", msg);
+                handlerDevice.post( new Runnable() {
+                    @Override
+                    public void run() {
+                        if (Integer.valueOf(fDevice) == 1)
+                        {
+                            if (Integer.valueOf(fStatus) == 1)
+                            {
+                                tuoinuocBtn.setText("Tắt Tưới nước");
+                                mayTuoiNuocStatus.setText("Mở");
+                            }else
+                            {
+                                tuoinuocBtn.setText("Mở Tưới nước");
+                                mayTuoiNuocStatus.setText("Tắt");
+                            }
+                        }else
+                        {
+                            if (Integer.valueOf(fStatus) == 1)
+                            {
+                                maiCheBtn.setText("Tắt Mái che");
+                                manCheStatus.setText("Mở");
+                            }else
+                            {
+                                maiCheBtn.setText("Mở Mái che");
+                                manCheStatus.setText("Tắt");
+                            }
+                        }
+                    }
+                } );
+            }
+        }, String.class);
         //Test
         imgEdit = (ImageButton) findViewById(R.id.imgEditProfile);
         imgEdit.setOnClickListener(new View.OnClickListener() {

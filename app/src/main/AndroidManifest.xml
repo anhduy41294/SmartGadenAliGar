@@ -21,8 +21,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".Chart.ListViewBarChartActivity" />
-        <activity android:name=".View.AddProfileActivity"></activity>
-        <activity android:name=".View.EditProfileActivity"></activity>
+        <activity android:name=".View.AddProfileActivity" />
+        <activity android:name=".View.EditProfileActivity" />
+        <activity
+            android:name=".View.AllProfileView.AllProfileActivity"
+            android:label="@string/title_activity_all_profile"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

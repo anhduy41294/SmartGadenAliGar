@@ -1,5 +1,6 @@
 package com.aliens.smartgarden.Chart;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -31,7 +32,7 @@ import java.util.List;
 /**
  * Created by Duy on 17-May-16.
  */
-public class ListViewBarChartActivity extends DemoBase {
+public class ListViewBarChartActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -25,8 +25,7 @@ public class AllProfileActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rv.setLayoutManager(linearLayoutManager);
 
-        AllProfileAdapter allProfileAdapter = new AllProfileAdapter(GlobalVariable.allProfile, this);
-        rv.setAdapter(allProfileAdapter);
+
 
     }
 

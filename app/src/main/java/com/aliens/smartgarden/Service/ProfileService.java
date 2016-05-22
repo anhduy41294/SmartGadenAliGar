@@ -154,4 +154,28 @@ public class ProfileService {
         }
 
     }
+
+    public String deleteProfile(int id) {
+        String stringUrl = BASE_URL + "/delete?id=" + id;
+        try {
+
+            URL url = new URL(stringUrl); // here is your URL path
+
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setReadTimeout(15000 /* milliseconds */);
+            conn.setConnectTimeout(15000 /* milliseconds */);
+            conn.setRequestMethod("DELETE");
+            conn.setDoOutput(true);
+
+            conn.connect();
+
+            int responseCode = conn.getResponseCode();
+            return Integer.toString(responseCode);
+
+        }
+        catch(Exception e){
+            return null;
+        }
+
+    }
 }

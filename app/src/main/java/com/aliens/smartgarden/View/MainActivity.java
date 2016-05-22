@@ -36,6 +36,7 @@ import com.aliens.smartgarden.R;
 import com.aliens.smartgarden.Service.RecordActionService;
 import com.aliens.smartgarden.View.AllProfileView.AllProfileActivity;
 import com.aliens.smartgarden.View.AllProfileView.AllProfileAdapter;
+import com.aliens.smartgarden.View.AllProfileView.ProfileFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -132,10 +133,16 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.commit();
 
         } else if (id == R.id.nav_chart) {
-            i = new Intent(this, ListViewBarChartActivity.class);
-            startActivity(i);
-        }else if (id == R.id.nav_profile) {
+            ChartFragment chartFragment = new ChartFragment();
+            FragmentTransaction fragmentTransactionChart = getSupportFragmentManager().beginTransaction();
+            fragmentTransactionChart.replace(R.id.fragment_container, chartFragment);
+            fragmentTransactionChart.commit();
 
+        }else if (id == R.id.nav_profile) {
+            ProfileFragment chartFragment = new ProfileFragment();
+            FragmentTransaction fragmentTransactionProfile = getSupportFragmentManager().beginTransaction();
+            fragmentTransactionProfile.replace(R.id.fragment_container, chartFragment);
+            fragmentTransactionProfile.commit();
         } else if (id == R.id.nav_manage) {
 
         }

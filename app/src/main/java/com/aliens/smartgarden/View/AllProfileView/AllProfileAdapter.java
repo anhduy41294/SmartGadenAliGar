@@ -24,12 +24,12 @@ import java.util.ArrayList;
 public class AllProfileAdapter extends RecyclerView.Adapter<AllProfileAdapter.ProfileViewHolder>{
 
     ArrayList<Profile> allProfile;
-    Activity parentActivity;
+    View parentView;
 
-    AllProfileAdapter(ArrayList<Profile> allProfile, Activity activity) {
+    AllProfileAdapter(ArrayList<Profile> allProfile, View view) {
 
         this.allProfile = allProfile;
-        this.parentActivity = activity;
+        this.parentView = view;
     }
 
     @Override
@@ -61,15 +61,15 @@ public class AllProfileAdapter extends RecyclerView.Adapter<AllProfileAdapter.Pr
     }
 
     private void allowEdit(final Profile profile) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity);
+        AlertDialog.Builder builder = new AlertDialog.Builder(parentView.getContext());
 
         builder.setTitle(profile.getProfileName())
                 .setPositiveButton("Sửa", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent i = new Intent(parentActivity, EditProfileActivity.class);
+                        Intent i = new Intent(parentView.getContext(), EditProfileActivity.class);
                         i.putExtra("IdProfile", profile.getIdProfile());
-                        parentActivity.startActivity(i);
+                        parentView.getContext().startActivity(i);
                     }
                 })
                 .setNegativeButton("Xóa", new DialogInterface.OnClickListener() {
@@ -84,7 +84,7 @@ public class AllProfileAdapter extends RecyclerView.Adapter<AllProfileAdapter.Pr
     }
 
     private void notAllowEdit() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(parentActivity);
+        AlertDialog.Builder builder = new AlertDialog.Builder(parentView.getContext());
 
         builder.setMessage("Profile hiện đang sử dụng, bạn không được thay đổi hay xóa profile này.")
                 .setTitle("Thông báo");

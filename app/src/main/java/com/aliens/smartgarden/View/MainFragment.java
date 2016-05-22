@@ -27,6 +27,7 @@ import com.aliens.smartgarden.Model.Profile;
 import com.aliens.smartgarden.Model.RecordAction;
 import com.aliens.smartgarden.Model.RecordSituation;
 import com.aliens.smartgarden.R;
+import com.aliens.smartgarden.Service.ProfileService;
 import com.aliens.smartgarden.Service.RecordActionService;
 
 import java.util.ArrayList;
@@ -184,7 +185,11 @@ public class MainFragment extends Fragment {
             }
         });
 
+        //deleteProfile deleteProfile = new deleteProfile();
+        //deleteProfile.execute(4);
+
         return view;
+
     }
 
     private void setUpTuoiNuocDialog() {
@@ -385,6 +390,24 @@ public class MainFragment extends Fragment {
             super.onPostExecute(allProfile);
             globalVariable.allProfile = allProfile;
             setUpSpinner();
+        }
+    }
+
+    /**
+     * AsyncTask
+     */
+    public class deleteProfile extends AsyncTask<Integer, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Integer... params) {
+            ProfileService profileService = new ProfileService();
+            profileService.deleteProfile(params[0]);
+            return null;
         }
     }
 }

@@ -33,7 +33,12 @@ public class AllProfileAdapter extends RecyclerView.Adapter<AllProfileAdapter.Pr
 
     @Override
     public void onBindViewHolder(ProfileViewHolder holder, int position) {
-
+        Profile profile = allProfile.get(position);
+        holder.tenProfile.setText(profile.getProfileName());
+        holder.temStandard.setText(String.valueOf(profile.getTemperatureStandard()));
+        holder.humStandard.setText(String.valueOf(profile.getHumidityStandard()));
+        holder.duration.setText(String.valueOf(profile.getDuration()));
+        holder.profileStatus.setText(profile.isStatus() ? "Đang áp dụng" : "");
     }
 
     @Override
@@ -43,11 +48,16 @@ public class AllProfileAdapter extends RecyclerView.Adapter<AllProfileAdapter.Pr
 
     public static class ProfileViewHolder extends RecyclerView.ViewHolder {
         CardView cv;
+        TextView tenProfile, temStandard, humStandard, profileStatus, duration;
 
         ProfileViewHolder(View itemView) {
             super(itemView);
             cv = (CardView)itemView.findViewById(R.id.cv);
-
+            tenProfile = (TextView)itemView.findViewById(R.id.tenProfileTextView);
+            temStandard = (TextView)itemView.findViewById(R.id.temStandartTextView);
+            humStandard = (TextView)itemView.findViewById(R.id.humStandartTextView);
+            profileStatus = (TextView)itemView.findViewById(R.id.profileStatusTextView);
+            duration = (TextView)itemView.findViewById(R.id.durationTextView);
         }
     }
 

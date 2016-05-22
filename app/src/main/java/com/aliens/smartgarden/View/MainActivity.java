@@ -28,10 +28,13 @@ import com.aliens.smartgarden.Chart.ListViewBarChartActivity;
 import com.aliens.smartgarden.Controller.LoaderHelper;
 import com.aliens.smartgarden.Global.GlobalVariable;
 import com.aliens.smartgarden.Model.Device;
+import com.aliens.smartgarden.Model.Profile;
 import com.aliens.smartgarden.Model.RecordAction;
 import com.aliens.smartgarden.Model.RecordSituation;
 import com.aliens.smartgarden.R;
 import com.aliens.smartgarden.Service.RecordActionService;
+import com.aliens.smartgarden.View.AllProfileView.AllProfileActivity;
+import com.aliens.smartgarden.View.AllProfileView.AllProfileAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +71,6 @@ public class MainActivity extends AppCompatActivity
 
         globalVariable = new GlobalVariable();
         setUpTuoiNuocDialog();
-        setUpSpinner();
         setUpButton();
 
         nhietDoTxt = (TextView) findViewById(R.id.txtTemperature);
@@ -80,6 +82,8 @@ public class MainActivity extends AppCompatActivity
         recordSituationAsyncTask.execute();
         RecordSituationDeviceAsyncTask recordSituationDeviceAsyncTask = new RecordSituationDeviceAsyncTask();
         recordSituationDeviceAsyncTask.execute();
+        getAllProfile getAllProfile = new getAllProfile();
+        getAllProfile.execute();
 
 //        recordAction = new RecordAction(1, "20");
 //        SendRecordAction sendRecordAction = new SendRecordAction();
@@ -260,7 +264,8 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         Intent i;
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+            i = new Intent(this, AllProfileActivity.class);
+            startActivity(i);
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -286,12 +291,9 @@ public class MainActivity extends AppCompatActivity
 
         // Spinner Drop down elements
         List<String> categories = new ArrayList<String>();
-        categories.add("Default Profile");
-        categories.add("Custom Profile 1");
-        categories.add("Custom Profile 2");
-        categories.add("Custom Profile 3");
-        categories.add("Custom Profile 4");
-        categories.add("Custom Profile 5");
+        for (Profile p:globalVariable.allProfile) {
+            categories.add(p.getProfileName());
+        }
 
         // Creating adapter for spinner
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
@@ -432,4 +434,32 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * AsyncTask
+     */
+    public class getAllProfile extends AsyncTask<String, Void, ArrayList<Profile>> {
+
+        public getAllProfile() {
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected ArrayList<Profile> doInBackground(String... params) {
+
+            LoaderHelper loaderHelper = new LoaderHelper();
+            return loaderHelper.getAllProfile();
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Profile> allProfile) {
+            super.onPostExecute(allProfile);
+            globalVariable.allProfile = allProfile;
+            setUpSpinner();
+        }
+    }
 }

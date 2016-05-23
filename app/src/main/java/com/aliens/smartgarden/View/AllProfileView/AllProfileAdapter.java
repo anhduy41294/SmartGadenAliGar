@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.aliens.smartgarden.Model.Profile;
 import com.aliens.smartgarden.R;
+import com.aliens.smartgarden.Service.ProfileService;
 import com.aliens.smartgarden.View.EditProfileActivity;
 
 import java.util.ArrayList;
@@ -75,7 +77,8 @@ public class AllProfileAdapter extends RecyclerView.Adapter<AllProfileAdapter.Pr
                 .setNegativeButton("Xóa", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        deleteProfile deleteProfile = new deleteProfile();
+                        deleteProfile.execute(profile.getIdProfile());
                     }
                 });
 
@@ -113,4 +116,26 @@ public class AllProfileAdapter extends RecyclerView.Adapter<AllProfileAdapter.Pr
         }
     }
 
+    /**
+     * AsyncTask
+     */
+    public class deleteProfile extends AsyncTask<Integer, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Integer... params) {
+            ProfileService profileService = new ProfileService();
+            profileService.deleteProfile(params[0]);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
+    }
 }

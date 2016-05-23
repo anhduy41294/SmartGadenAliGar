@@ -1,5 +1,7 @@
 package com.aliens.smartgarden.View;
 
+import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -56,16 +58,13 @@ public class MainActivity extends AppCompatActivity
 
     NavigationView navigationView = null;
     Toolbar toolbar = null;
+    ProgressDialog progressDialog;
+    LoadFragment loadFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        MainFragment mainFragment = new MainFragment();
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, mainFragment);
-        fragmentTransaction.commit();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -85,8 +84,11 @@ public class MainActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         assert navigationView != null;
         navigationView.setNavigationItemSelectedListener(this);
+        progressDialog = new ProgressDialog(getBaseContext());
+        progressDialog.setTitle("Đang tải...");
 
-
+        loadFragment = new LoadFragment();
+        loadFragment.execute(1);
     }
 
 
@@ -125,24 +127,16 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        Intent i;
+
         if (id == R.id.nav_home) {
-            MainFragment mainFragment = new MainFragment();
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, mainFragment);
-            fragmentTransaction.commit();
-
+            LoadFragment loadFragmentMain = new LoadFragment();
+            loadFragmentMain.execute(1);
         } else if (id == R.id.nav_chart) {
-            ChartFragment chartFragment = new ChartFragment();
-            FragmentTransaction fragmentTransactionChart = getSupportFragmentManager().beginTransaction();
-            fragmentTransactionChart.replace(R.id.fragment_container, chartFragment);
-            fragmentTransactionChart.commit();
-
+            LoadFragment loadFragmentChart = new LoadFragment();
+            loadFragmentChart.execute(2);
         }else if (id == R.id.nav_profile) {
-            ProfileFragment chartFragment = new ProfileFragment();
-            FragmentTransaction fragmentTransactionProfile = getSupportFragmentManager().beginTransaction();
-            fragmentTransactionProfile.replace(R.id.fragment_container, chartFragment);
-            fragmentTransactionProfile.commit();
+            LoadFragment loadFragmentProfile = new LoadFragment();
+            loadFragmentProfile.execute(3);
         } else if (id == R.id.nav_manage) {
 
         }
@@ -153,6 +147,52 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    public class LoadFragment extends AsyncTask<Integer, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+           // progressDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Integer... params) {
+            switch (params[0])
+            {
+                case 1:
+                {
+                    MainFragment mainFragment = new MainFragment();
+                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.fragment_container, mainFragment);
+                    fragmentTransaction.commitAllowingStateLoss();
+                    return null;
+                }
+                case 2:
+                {
+                    ChartFragment chartFragment = new ChartFragment();
+                    FragmentTransaction fragmentTransactionChart = getSupportFragmentManager().beginTransaction();
+                    fragmentTransactionChart.replace(R.id.fragment_container, chartFragment);
+                    fragmentTransactionChart.commit();
+                    return null;
+                }
+                case 3:
+                {
+                    ProfileFragment chartFragment = new ProfileFragment();
+                    FragmentTransaction fragmentTransactionProfile = getSupportFragmentManager().beginTransaction();
+                    fragmentTransactionProfile.replace(R.id.fragment_container, chartFragment);
+                    fragmentTransactionProfile.commit();
+                    return null;
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            //progressDialog.dismiss();
+        }
+    }
 
 
 }

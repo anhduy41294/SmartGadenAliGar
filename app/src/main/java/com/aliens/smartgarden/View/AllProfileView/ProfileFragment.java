@@ -1,6 +1,7 @@
 package com.aliens.smartgarden.View.AllProfileView;
 
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.aliens.smartgarden.Global.GlobalVariable;
 import com.aliens.smartgarden.R;
+import com.aliens.smartgarden.Service.ProfileService;
 
 /**
  * A simple {@link Fragment} subclass.

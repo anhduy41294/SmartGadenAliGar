@@ -1,6 +1,7 @@
 package com.aliens.smartgarden.View;
 
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -58,6 +59,7 @@ public class MainFragment extends Fragment {
     MaterialNumberPicker numberPicker;
     AlertDialog.Builder alertDialog;
     View view = null;
+    ProgressDialog progressDialog;
 
     public MainFragment() {
         // Required empty public constructor
@@ -78,6 +80,9 @@ public class MainFragment extends Fragment {
         doAmTxt = (TextView) view.findViewById(R.id.txtHumidity);
         mayTuoiNuocStatus = (TextView) view.findViewById(R.id.mayTuoiNuocStatus);
         manCheStatus = (TextView) view.findViewById(R.id.manCheStatus);
+        progressDialog = new ProgressDialog(view.getContext());
+        progressDialog.setTitle("Đang tải...");
+
 
         RecordSituationAsyncTask recordSituationAsyncTask = new RecordSituationAsyncTask();
         recordSituationAsyncTask.execute();
@@ -185,8 +190,7 @@ public class MainFragment extends Fragment {
             }
         });
 
-        //deleteProfile deleteProfile = new deleteProfile();
-        //deleteProfile.execute(4);
+
 
         return view;
 
@@ -276,13 +280,17 @@ public class MainFragment extends Fragment {
      */
     public class RecordSituationAsyncTask extends AsyncTask<String, Void, RecordSituation> {
 
+
+
         public RecordSituationAsyncTask() {
+
 
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            progressDialog.show();
         }
 
         @Override
@@ -299,6 +307,8 @@ public class MainFragment extends Fragment {
             //Set value to UI
             nhietDoTxt.setText(String.valueOf((int)o.getTemperature()));
             doAmTxt.setText(String.valueOf((int)o.getHumidity()));
+
+            progressDialog.dismiss();
         }
     }
 
@@ -341,6 +351,7 @@ public class MainFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            progressDialog.show();
         }
 
         @Override
@@ -361,6 +372,7 @@ public class MainFragment extends Fragment {
             maiCheBtn.setText(devices.get(1).isDeviceStatus()?"Tắt mái che" : "Mở mái che");
             mayTuoiNuocStatus.setText(devices.get(0).isDeviceStatus()?"Mở" : "Tắt");
             manCheStatus.setText(devices.get(1).isDeviceStatus()?"Mở" : "Tắt");
+            progressDialog.dismiss();
         }
     }
 
@@ -376,6 +388,7 @@ public class MainFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            progressDialog.show();
         }
 
         @Override
@@ -390,6 +403,8 @@ public class MainFragment extends Fragment {
             super.onPostExecute(allProfile);
             globalVariable.allProfile = allProfile;
             setUpSpinner();
+
+            progressDialog.dismiss();
         }
     }
 
@@ -401,6 +416,7 @@ public class MainFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            progressDialog.show();
         }
 
         @Override
@@ -408,6 +424,12 @@ public class MainFragment extends Fragment {
             ProfileService profileService = new ProfileService();
             profileService.deleteProfile(params[0]);
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            progressDialog.dismiss();
         }
     }
 }

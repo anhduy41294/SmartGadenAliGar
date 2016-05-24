@@ -9,7 +9,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,8 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,9 +30,8 @@ import com.aliens.smartgarden.Model.Profile;
 import com.aliens.smartgarden.Model.RecordAction;
 import com.aliens.smartgarden.Model.RecordSituation;
 import com.aliens.smartgarden.R;
-import com.aliens.smartgarden.Service.ProfileService;
+import com.aliens.smartgarden.Service.ModeService;
 import com.aliens.smartgarden.Service.RecordActionService;
-import com.aliens.smartgarden.View.AllProfileView.ProfileFragment;
 import com.aliens.smartgarden.View.UI.ArcProgress;
 
 import java.util.ArrayList;
@@ -63,6 +63,8 @@ public class MainFragment extends Fragment {
     AlertDialog.Builder alertDialog;
     View view = null;
     ProgressDialog progressDialog;
+    Switch aSwitch;
+
     ArcProgress arcProgressTemperature;
     ArcProgress arcProgressHumidity;
     ArcProgress arcProgressLight;
@@ -97,6 +99,15 @@ public class MainFragment extends Fragment {
             }
         });
 
+        //Add Switch
+        aSwitch = (Switch) view.findViewById(R.id.autoSwitch);
+        aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                ChangeMode mode = new ChangeMode();
+                mode.execute(isChecked);
+            }
+        });
 
         progressDialog = new ProgressDialog(view.getContext());
         progressDialog.setTitle("Đang tải...");
@@ -104,6 +115,7 @@ public class MainFragment extends Fragment {
         arcProgressHumidity = (ArcProgress) view.findViewById(R.id.arc_humidity);
 
         arcProgressTemperature.setSuffixText("\u2103");
+
 
         RecordSituationAsyncTask recordSituationAsyncTask = new RecordSituationAsyncTask();
         recordSituationAsyncTask.execute();
@@ -113,6 +125,8 @@ public class MainFragment extends Fragment {
         getAllProfile.execute();
         SetupPushNoti setupPushNoti = new SetupPushNoti();
         setupPushNoti.execute();
+        LoadMode loadMode = new LoadMode();
+        loadMode.execute();
 
         handlerSituation = new Handler();
         handlerDevice = new Handler();
@@ -365,7 +379,7 @@ public class MainFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            // progressDialog.show();
+            progressDialog.show();
         }
 
         @Override
@@ -466,7 +480,73 @@ public class MainFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            //progressDialog.dismiss();
+            progressDialog.dismiss();
+        }
+    }
+
+    public class ChangeMode extends AsyncTask<Boolean, Void, Void> {
+
+        public ChangeMode() {
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Boolean... params) {
+            ModeService modeService = new ModeService();
+            if (params[0] == false)
+            {
+                modeService.postUsermode(false);
+            }else {
+                modeService.postUsermode(true);
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            progressDialog.dismiss();
+        }
+    }
+
+    public class LoadMode extends AsyncTask<Void, Void, Boolean> {
+
+        public LoadMode() {
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            ModeService modeService = new ModeService();
+            boolean b = modeService.getModeStatus();
+
+            return b;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+
+            if (aBoolean == false)
+            {
+                aSwitch.setChecked(false);
+            }else {
+                aSwitch.setChecked(true);
+            }
+            progressDialog.dismiss();
         }
     }
 }

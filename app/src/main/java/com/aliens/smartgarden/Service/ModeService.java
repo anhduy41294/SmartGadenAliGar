@@ -77,6 +77,7 @@ public class ModeService {
             URL url = new URL(stringUrl); // here is your URL path
 
             JSONObject postDataParams = new JSONObject();
+            postDataParams.put("IdMode", 1);
             postDataParams.put("Mode", mode);
             Log.e("params", postDataParams.toString());
 

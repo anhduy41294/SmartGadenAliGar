@@ -93,8 +93,6 @@ public class MainFragment extends Fragment {
 
         arcProgressTemperature.setSuffixText("\u2103");
 
-
-
         RecordSituationAsyncTask recordSituationAsyncTask = new RecordSituationAsyncTask();
         recordSituationAsyncTask.execute();
         RecordSituationDeviceAsyncTask recordSituationDeviceAsyncTask = new RecordSituationDeviceAsyncTask();
@@ -107,15 +105,15 @@ public class MainFragment extends Fragment {
         handlerSituation = new Handler();
         handlerDevice = new Handler();
         //Test
-        imgEdit = (ImageButton) view.findViewById(R.id.imgEditProfile);
-        imgEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(view.getContext(), EditProfileActivity.class);
-                i.putExtra("IdProfile", 2);
-                startActivity(i);
-            }
-        });
+//        imgEdit = (ImageButton) view.findViewById(R.id.imgEditProfile);
+//        imgEdit.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent i = new Intent(view.getContext(), EditProfileActivity.class);
+//                i.putExtra("IdProfile", 2);
+//                startActivity(i);
+//            }
+//        });
         return view;
 
     }

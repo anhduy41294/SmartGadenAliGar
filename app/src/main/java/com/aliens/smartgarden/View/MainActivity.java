@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            //progressDialog.dismiss();
+            progressDialog.dismiss();
         }
     }
 

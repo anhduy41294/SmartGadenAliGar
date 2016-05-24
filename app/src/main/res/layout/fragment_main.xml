@@ -114,7 +114,7 @@
                     android:padding="8dp"
                     android:text="Tưới Nước : OFF"
                     android:textColor="@color/navy"
-                    android:textSize="20dp" />
+                    android:textSize="15dp" />
 
                 <View
                     android:layout_width="6dp"
@@ -130,7 +130,7 @@
                     android:padding="8dp"
                     android:text="Mái che : OFF"
                     android:textColor="@color/navy"
-                    android:textSize="20dp" />
+                    android:textSize="15dp" />
             </LinearLayout>
 
             <View

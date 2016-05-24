@@ -150,6 +150,14 @@ public class MainFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Toast.makeText(view.getContext(), String.valueOf(numberPicker.getValue()), Toast.LENGTH_SHORT).show();
+
+                        recordAction = new RecordAction(1, String.valueOf(numberPicker.getValue()));
+                        SendRecordAction sendRecordAction = new SendRecordAction();
+                        sendRecordAction.execute();
+
+                        globalVariable.isTuoiNuoc = true;
+                        tuoinuocBtn.setText("Tắt Tưới nước");
+                        mayTuoiNuocStatus.setText("Tắt");
                     }
                 });
     }
@@ -181,14 +189,16 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (globalVariable.isTuoiNuoc) {
+
+                    recordAction = new RecordAction(2, "1");
+                    SendRecordAction sendRecordAction = new SendRecordAction();
+                    sendRecordAction.execute();
+
                     globalVariable.isTuoiNuoc = false;
                     tuoinuocBtn.setText("Mở tưới nước");
                     mayTuoiNuocStatus.setText("Mở");
                 } else {
                     alertDialog.show();
-                    globalVariable.isTuoiNuoc = true;
-                    tuoinuocBtn.setText("Tắt Tưới nước");
-                    mayTuoiNuocStatus.setText("Tắt");
                 }
             }
         });
@@ -197,10 +207,20 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (globalVariable.isManChe) {
+
+                    recordAction = new RecordAction(3, "1");
+                    SendRecordAction sendRecordAction = new SendRecordAction();
+                    sendRecordAction.execute();
+
                     globalVariable.isManChe = false;
                     maiCheBtn.setText("Tắt mái che");
                     manCheStatus.setText("Mở");
                 } else {
+
+                    recordAction = new RecordAction(4, "1");
+                    SendRecordAction sendRecordAction = new SendRecordAction();
+                    sendRecordAction.execute();
+                    
                     globalVariable.isManChe = true;
                     maiCheBtn.setText("Mở mái che");
                     manCheStatus.setText("Tắt");

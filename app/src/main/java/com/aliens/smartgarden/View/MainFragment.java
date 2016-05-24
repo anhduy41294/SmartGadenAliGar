@@ -30,6 +30,7 @@ import com.aliens.smartgarden.Model.RecordSituation;
 import com.aliens.smartgarden.R;
 import com.aliens.smartgarden.Service.ProfileService;
 import com.aliens.smartgarden.Service.RecordActionService;
+import com.aliens.smartgarden.View.UI.ArcProgress;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +61,9 @@ public class MainFragment extends Fragment {
     AlertDialog.Builder alertDialog;
     View view = null;
     ProgressDialog progressDialog;
+    ArcProgress arcProgressTemperature;
+    ArcProgress arcProgressHumidity;
+    ArcProgress arcProgressLight;
 
     public MainFragment() {
         // Required empty public constructor
@@ -82,6 +86,11 @@ public class MainFragment extends Fragment {
         manCheStatus = (TextView) view.findViewById(R.id.manCheStatus);
         progressDialog = new ProgressDialog(view.getContext());
         progressDialog.setTitle("Đang tải...");
+        arcProgressTemperature = (ArcProgress) view.findViewById(R.id.arc_temperature);
+        arcProgressHumidity = (ArcProgress) view.findViewById(R.id.arc_humidity);
+
+        arcProgressTemperature.setSuffixText("\u2103");
+
 
 
         RecordSituationAsyncTask recordSituationAsyncTask = new RecordSituationAsyncTask();
@@ -308,6 +317,8 @@ public class MainFragment extends Fragment {
             nhietDoTxt.setText(String.valueOf((int)o.getTemperature()));
             doAmTxt.setText(String.valueOf((int)o.getHumidity()));
 
+            arcProgressTemperature.setProgress((int)o.getTemperature());
+            arcProgressHumidity.setProgress((int)o.getHumidity());
             progressDialog.dismiss();
         }
     }

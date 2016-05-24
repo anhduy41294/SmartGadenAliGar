@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -44,7 +45,8 @@
                         android:text="37"
                         android:textAlignment="center"
                         android:textColor="@color/navy"
-                        android:textSize="100dp" />
+                        android:textSize="100dp"
+                        android:visibility="gone"/>
 
                     <TextView
                         android:id="@+id/txtHumidity"
@@ -53,7 +55,36 @@
                         android:text="25"
                         android:textAlignment="center"
                         android:textColor="@color/navy"
-                        android:textSize="100dp" />
+                        android:textSize="100dp"
+                        android:visibility="gone"/>
+
+                    <com.aliens.smartgarden.View.UI.ArcProgress
+                        android:id="@+id/arc_temperature"
+                        android:layout_width="120.0dip"
+                        android:layout_height="120.0dip"
+                        android:layout_marginBottom="25.0dip"
+                        android:layout_marginLeft="15.0dip"
+                        custom:arc_bottom_text="Nhiệt độ"
+                        custom:arc_bottom_text_size="14.0dip"
+                        custom:arc_progress="10"
+                        custom:arc_stroke_width="5.0dip"
+                        custom:arc_suffix_text_size="20.0sp"
+                        custom:arc_text_color="@color/primaryText"
+                        custom:arc_text_size="40.0sp" />
+
+                    <com.aliens.smartgarden.View.UI.ArcProgress
+                        android:id="@+id/arc_humidity"
+                        android:layout_width="120.0dip"
+                        android:layout_height="120.0dip"
+                        android:layout_marginBottom="25.0dip"
+                        android:layout_marginLeft="15.0dip"
+                        custom:arc_bottom_text="Độ ẩm"
+                        custom:arc_bottom_text_size="14.0dip"
+                        custom:arc_progress="10"
+                        custom:arc_stroke_width="5.0dip"
+                        custom:arc_suffix_text_size="20.0sp"
+                        custom:arc_text_color="@color/primaryText"
+                        custom:arc_text_size="40.0sp" />
                 </TableRow>
             </TableLayout>
 
@@ -187,7 +218,7 @@
                         android:layout_weight="1"
                         android:text="Máy tưới nước"
                         android:textAlignment="center"
-                        android:textColor="@color/black"/>
+                        android:textColor="@color/black" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -195,7 +226,7 @@
                         android:layout_weight="1"
                         android:text="Màn che"
                         android:textAlignment="center"
-                        android:textColor="@color/black"/>
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
 

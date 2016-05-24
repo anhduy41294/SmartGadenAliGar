@@ -58,7 +58,7 @@ public class MainFragment extends Fragment {
     TextView nhietDoTxt, doAmTxt, mayTuoiNuocStatus, manCheStatus;
     Handler handlerSituation;
     Handler handlerDevice;
-    ImageButton imgEdit;
+    ImageButton imgAddProfile;
     MaterialNumberPicker numberPicker;
     AlertDialog.Builder alertDialog;
     View view = null;
@@ -86,6 +86,18 @@ public class MainFragment extends Fragment {
         doAmTxt = (TextView) view.findViewById(R.id.txtHumidity);
         mayTuoiNuocStatus = (TextView) view.findViewById(R.id.mayTuoiNuocStatus);
         manCheStatus = (TextView) view.findViewById(R.id.manCheStatus);
+
+        //Add Profile
+        imgAddProfile = (ImageButton) view.findViewById(R.id.imgAddProfile);
+        imgAddProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getContext(),AddProfileActivity.class);
+                startActivity(i);
+            }
+        });
+
+
         progressDialog = new ProgressDialog(view.getContext());
         progressDialog.setTitle("Đang tải...");
         arcProgressTemperature = (ArcProgress) view.findViewById(R.id.arc_temperature);
@@ -324,31 +336,6 @@ public class MainFragment extends Fragment {
             globalVariable.allProfile = allProfile;
             setUpSpinner();
 
-            progressDialog.dismiss();
-        }
-    }
-
-    /**
-     * AsyncTask
-     */
-    public class deleteProfile extends AsyncTask<Integer, Void, Void> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog.show();
-        }
-
-        @Override
-        protected Void doInBackground(Integer... params) {
-            ProfileService profileService = new ProfileService();
-            profileService.deleteProfile(params[0]);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
             progressDialog.dismiss();
         }
     }

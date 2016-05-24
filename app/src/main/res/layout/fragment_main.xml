@@ -176,6 +176,7 @@
                         android:padding="8dp" />
 
                     <ImageButton
+                        android:id="@+id/imgAddProfile"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"

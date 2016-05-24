@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,6 +31,7 @@ import com.aliens.smartgarden.Model.RecordSituation;
 import com.aliens.smartgarden.R;
 import com.aliens.smartgarden.Service.ProfileService;
 import com.aliens.smartgarden.Service.RecordActionService;
+import com.aliens.smartgarden.View.AllProfileView.ProfileFragment;
 import com.aliens.smartgarden.View.UI.ArcProgress;
 
 import java.util.ArrayList;
@@ -99,95 +101,11 @@ public class MainFragment extends Fragment {
         recordSituationDeviceAsyncTask.execute();
         getAllProfile getAllProfile = new getAllProfile();
         getAllProfile.execute();
+        SetupPushNoti setupPushNoti = new SetupPushNoti();
+        setupPushNoti.execute();
 
-        /**
-         * Push Notification
-         */
-        Platform.loadPlatformComponent(new AndroidPlatformComponent());
-
-        String host = "http://aligarapi.apphb.com/";
-        HubConnection connection = new HubConnection(host);
-
-        HubProxy hub = connection.createHubProxy("MyHub");
-
-        SignalRFuture<Void> awaitConnection = connection.start();
-        try {
-            awaitConnection.get();
-        } catch (InterruptedException e) {
-            // Handle ...
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            // Handle ...
-            e.printStackTrace();
-        }
         handlerSituation = new Handler();
         handlerDevice = new Handler();
-        hub.subscribe(this);
-
-        hub.on("notifyNewSituation", new SubscriptionHandler1<String>() {
-            @Override
-            public void run(String msg) {
-                //Log.d("result := ", msg);
-                String[] separated = msg.split("=");
-                final String fStatusTem = separated[0].substring(0, 2);
-                final String fStatusHum = separated[1].substring(0, 2);
-                Log.i("=======Notify", msg);
-                handlerSituation.post( new Runnable() {
-                    @Override
-                    public void run() {
-                        nhietDoTxt.setText(fStatusTem);
-                        doAmTxt.setText(fStatusHum);
-                    }
-                } );
-            }
-        }, String.class);
-
-        hub.on("notifyNew", new SubscriptionHandler1<String>() {
-            @Override
-            public void run(String msg) {
-                //Log.d("result := ", msg);
-                Log.i("=======Notify", msg);
-            }
-        }, String.class);
-
-        hub.on("notifyNewDeviceStatus", new SubscriptionHandler1<String>() {
-            @Override
-            public void run(String msg) {
-                //Log.d("result := ", msg);
-                String[] separated = msg.split("=");
-                final String fDevice = separated[0];
-                final String fStatus = separated[1];
-                Log.i("=======Notify", msg);
-                handlerDevice.post( new Runnable() {
-                    @Override
-                    public void run() {
-                        if (Integer.valueOf(fDevice) == 1)
-                        {
-                            if (Integer.valueOf(fStatus) == 1)
-                            {
-                                tuoinuocBtn.setText("Tắt Tưới nước");
-                                mayTuoiNuocStatus.setText("Mở");
-                            }else
-                            {
-                                tuoinuocBtn.setText("Mở Tưới nước");
-                                mayTuoiNuocStatus.setText("Tắt");
-                            }
-                        }else
-                        {
-                            if (Integer.valueOf(fStatus) == 1)
-                            {
-                                maiCheBtn.setText("Tắt Mái che");
-                                manCheStatus.setText("Mở");
-                            }else
-                            {
-                                maiCheBtn.setText("Mở Mái che");
-                                manCheStatus.setText("Tắt");
-                            }
-                        }
-                    }
-                } );
-            }
-        }, String.class);
         //Test
         imgEdit = (ImageButton) view.findViewById(R.id.imgEditProfile);
         imgEdit.setOnClickListener(new View.OnClickListener() {
@@ -198,9 +116,6 @@ public class MainFragment extends Fragment {
                 startActivity(i);
             }
         });
-
-
-
         return view;
 
     }
@@ -289,11 +204,7 @@ public class MainFragment extends Fragment {
      */
     public class RecordSituationAsyncTask extends AsyncTask<String, Void, RecordSituation> {
 
-
-
         public RecordSituationAsyncTask() {
-
-
         }
 
         @Override
@@ -441,6 +352,116 @@ public class MainFragment extends Fragment {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             progressDialog.dismiss();
+        }
+    }
+
+    public class SetupPushNoti extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // progressDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            /**
+             * Push Notification
+             */
+            Platform.loadPlatformComponent(new AndroidPlatformComponent());
+
+            String host = "http://aligarapi.apphb.com/";
+            HubConnection connection = new HubConnection(host);
+
+            HubProxy hub = connection.createHubProxy("MyHub");
+
+            SignalRFuture<Void> awaitConnection = connection.start();
+            try {
+                awaitConnection.get();
+            } catch (InterruptedException e) {
+                // Handle ...
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                // Handle ...
+                e.printStackTrace();
+            }
+
+            hub.subscribe(this);
+
+            hub.on("notifyNewSituation", new SubscriptionHandler1<String>() {
+                @Override
+                public void run(String msg) {
+                    //Log.d("result := ", msg);
+                    String[] separated = msg.split("=");
+                    final String fStatusTem = separated[0].substring(0, 2);
+                    final String fStatusHum = separated[1].substring(0, 2);
+                    Log.i("=======Notify", msg);
+                    handlerSituation.post( new Runnable() {
+                        @Override
+                        public void run() {
+                            nhietDoTxt.setText(fStatusTem);
+                            doAmTxt.setText(fStatusHum);
+                            arcProgressTemperature.setProgress(Integer.valueOf(fStatusTem));
+                            arcProgressHumidity.setProgress(Integer.valueOf(fStatusHum));
+                        }
+                    } );
+                }
+            }, String.class);
+
+            hub.on("notifyNew", new SubscriptionHandler1<String>() {
+                @Override
+                public void run(String msg) {
+                    //Log.d("result := ", msg);
+                    Log.i("=======Notify", msg);
+                }
+            }, String.class);
+
+            hub.on("notifyNewDeviceStatus", new SubscriptionHandler1<String>() {
+                @Override
+                public void run(String msg) {
+                    //Log.d("result := ", msg);
+                    String[] separated = msg.split("=");
+                    final String fDevice = separated[0];
+                    final String fStatus = separated[1];
+                    Log.i("=======Notify", msg);
+                    handlerDevice.post( new Runnable() {
+                        @Override
+                        public void run() {
+                            if (Integer.valueOf(fDevice) == 1)
+                            {
+                                if (Integer.valueOf(fStatus) == 1)
+                                {
+                                    tuoinuocBtn.setText("Tắt Tưới nước");
+                                    mayTuoiNuocStatus.setText("Mở");
+                                }else
+                                {
+                                    tuoinuocBtn.setText("Mở Tưới nước");
+                                    mayTuoiNuocStatus.setText("Tắt");
+                                }
+                            }else
+                            {
+                                if (Integer.valueOf(fStatus) == 1)
+                                {
+                                    maiCheBtn.setText("Tắt Mái che");
+                                    manCheStatus.setText("Mở");
+                                }else
+                                {
+                                    maiCheBtn.setText("Mở Mái che");
+                                    manCheStatus.setText("Tắt");
+                                }
+                            }
+                        }
+                    } );
+                }
+            }, String.class);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            //progressDialog.dismiss();
         }
     }
 }

@@ -36,6 +36,31 @@ public class DataParser {
 //        }
         return rs;
     }
+
+    public static ArrayList<RecordSituation> parseSituationChart(String data) throws JSONException {
+        JSONArray jArr = new JSONArray(data);
+        ArrayList<RecordSituation> rs = new ArrayList<>();
+        for (int i = 0; i < jArr.length(); i++) {
+            RecordSituation recordSituation = new RecordSituation();
+            recordSituation.setIdRecord(getInt("IdRecordSituation", jArr.getJSONObject(i)));
+            recordSituation.setTemperature(getFloat("Temperature", jArr.getJSONObject(i)));
+            recordSituation.setHumidity(getFloat("Humidity", jArr.getJSONObject(i)));
+            recordSituation.setLight(getFloat("Light", jArr.getJSONObject(i)));
+
+            //        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); //Thay đổi về sau
+            //        Date date;
+            //        try {
+            //            date = format.parse(getString("RecordTime", jObj));
+            //            rs.setRecordTime(date);
+            //        } catch (ParseException e) {
+            //            // TODO Auto-generated catch block
+            //            e.printStackTrace();
+            //        }
+            rs.add(recordSituation);
+        }
+        return rs;
+    }
+
     public static Profile parseProfileDetail(String data) throws JSONException {
         Profile rs = new Profile();
 

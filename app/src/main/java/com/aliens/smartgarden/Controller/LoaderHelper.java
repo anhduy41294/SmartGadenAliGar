@@ -28,6 +28,17 @@ public class LoaderHelper {
         return  null;
     }
 
+    public ArrayList<RecordSituation> getSituationChart(){
+        RecordSituationService recordSituationService = new RecordSituationService();
+        String data = recordSituationService.getSituationChart();
+        try {
+            return DataParser.parseSituationChart(data);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return  null;
+    }
+
     public Profile getProfileDetail(int id){
         ProfileService profileService = new ProfileService();
         String data = profileService.getProfileDetail(id);

@@ -18,6 +18,12 @@ public class RecordSituationService {
         return getSituationData(url);
     }
 
+    public String getSituationChart() {
+        String url = BASE_URL + "/getchart";
+
+        return getSituationData(url);
+    }
+
     /**
      * GET METHOD
      */
@@ -26,7 +32,7 @@ public class RecordSituationService {
         InputStream is = null;
 
         try {
-            con = (HttpURLConnection) ( new URL("http://aligarapi.apphb.com/api/recordsituation/lastest")).openConnection();
+            con = (HttpURLConnection) ( new URL(url)).openConnection();
             con.setRequestMethod("GET");
             con.setDoInput(true);
             con.setDoOutput(false);
@@ -54,4 +60,6 @@ public class RecordSituationService {
 
         return null;
     }
+
+
 }

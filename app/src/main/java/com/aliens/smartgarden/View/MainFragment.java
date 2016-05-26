@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -33,6 +34,7 @@ import com.aliens.smartgarden.Model.RecordAction;
 import com.aliens.smartgarden.Model.RecordSituation;
 import com.aliens.smartgarden.R;
 import com.aliens.smartgarden.Service.ModeService;
+import com.aliens.smartgarden.Service.ProfileService;
 import com.aliens.smartgarden.Service.RecordActionService;
 import com.aliens.smartgarden.View.UI.ArcProgress;
 
@@ -52,7 +54,7 @@ import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     Spinner spinner;
     FButton tuoinuocBtn, maiCheBtn;
@@ -117,8 +119,6 @@ public class MainFragment extends Fragment {
                 } else {
                     tuoinuocBtn.setEnabled(true);
                     maiCheBtn.setEnabled(true);
-//                    tuoinuocBtn.setButtonColor(getResources().getColor(R.color.colorPrimary));
-//                    maiCheBtn.setButtonColor(getResources().getColor(R.color.colorPrimary));
                     RecordSituationDeviceAsyncTask recordSituationDeviceAsyncTask = new RecordSituationDeviceAsyncTask();
                     recordSituationDeviceAsyncTask.execute();
                 }
@@ -129,9 +129,9 @@ public class MainFragment extends Fragment {
         progressDialog.setTitle("Đang tải...");
         arcProgressTemperature = (ArcProgress) view.findViewById(R.id.arc_temperature);
         arcProgressHumidity = (ArcProgress) view.findViewById(R.id.arc_humidity);
-
         arcProgressTemperature.setSuffixText("\u2103");
-
+        handlerSituation = new Handler();
+        handlerDevice = new Handler();
 
         RecordSituationAsyncTask recordSituationAsyncTask = new RecordSituationAsyncTask();
         recordSituationAsyncTask.execute();
@@ -144,53 +144,8 @@ public class MainFragment extends Fragment {
         LoadMode loadMode = new LoadMode();
         loadMode.execute();
 
-        handlerSituation = new Handler();
-        handlerDevice = new Handler();
-        //Test
-//        imgEdit = (ImageButton) view.findViewById(R.id.imgEditProfile);
-//        imgEdit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent i = new Intent(view.getContext(), EditProfileActivity.class);
-//                i.putExtra("IdProfile", 2);
-//                startActivity(i);
-//            }
-//        });
         return view;
-
     }
-
-//    private void setUpTuoiNuocDialog() {
-//        numberPicker = new MaterialNumberPicker.Builder(view.getContext())
-//                .minValue(1)
-//                .maxValue(20)
-//                .defaultValue(10)
-//                .backgroundColor(Color.WHITE)
-//                .separatorColor(Color.TRANSPARENT)
-//                .textColor(Color.BLACK)
-//                .textSize(20)
-//                .enableFocusability(false)
-//                .wrapSelectorWheel(true)
-//                .build();
-//
-//        alertDialog = new AlertDialog.Builder(view.getContext())
-//                .setTitle("Thời gian tưới nước (phút):")
-//                .setView(numberPicker)
-//                .setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        Toast.makeText(view.getContext(), String.valueOf(numberPicker.getValue()), Toast.LENGTH_SHORT).show();
-//
-//                        recordAction = new RecordAction(1, String.valueOf(numberPicker.getValue()));
-//                        SendRecordAction sendRecordAction = new SendRecordAction();
-//                        sendRecordAction.execute();
-//
-//                        globalVariable.isTuoiNuoc = true;
-//                        tuoinuocBtn.setText("Tắt Tưới nước");
-//                        mayTuoiNuocStatus.setText("Tắt");
-//                    }
-//                });
-//    }
 
     private void setUpSpinner() {
         spinner = (Spinner) view.findViewById(R.id.spnUserProfile);
@@ -214,6 +169,7 @@ public class MainFragment extends Fragment {
         spinner.setAdapter(dataAdapter);
         int spinnerPosition = dataAdapter.getPosition(GlobalVariable.currentProfile.getProfileName());
         spinner.setSelection(spinnerPosition);
+        spinner.setOnItemSelectedListener(this);
     }
 
     private void setUpButton() {
@@ -305,6 +261,26 @@ public class MainFragment extends Fragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        Log.i("Selected item : ",String.valueOf(GlobalVariable.allProfile.get(position).getIdProfile()));
+        if (GlobalVariable.currentProfile == null) {
+            ChangeProfileStatus changeProfileStatus = new ChangeProfileStatus();
+            changeProfileStatus.execute(position);
+        } else {
+            if (GlobalVariable.allProfile.get(position).getIdProfile() != GlobalVariable.currentProfile.getIdProfile()) {
+                ChangeProfileStatus changeProfileStatus = new ChangeProfileStatus();
+                changeProfileStatus.execute(position);
+            }
+        }
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 
     /**
@@ -445,7 +421,7 @@ public class MainFragment extends Fragment {
         }
     }
 
-    public class SetupPushNoti extends AsyncTask<Void, Void, Void> {
+    public class SetupPushNoti extends AsyncTask<Void, Void, HubProxy> {
 
         @Override
         protected void onPreExecute() {
@@ -454,7 +430,7 @@ public class MainFragment extends Fragment {
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected HubProxy doInBackground(Void... params) {
             /**
              * Push Notification
              */
@@ -478,6 +454,84 @@ public class MainFragment extends Fragment {
 
             hub.subscribe(this);
 
+//            hub.on("notifyNewSituation", new SubscriptionHandler1<String>() {
+//                @Override
+//                public void run(String msg) {
+//                    //Log.d("result := ", msg);
+//                    String[] separated = msg.split("=");
+//                    final String fStatusTem = separated[0].substring(0, 2);
+//                    final String fStatusHum = separated[1].substring(0, 2);
+//                    Log.i("=======Notify", msg);
+//                    handlerSituation.post( new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            nhietDoTxt.setText(fStatusTem);
+//                            doAmTxt.setText(fStatusHum);
+//                            arcProgressTemperature.setProgress(Integer.valueOf(fStatusTem));
+//                            arcProgressHumidity.setProgress(Integer.valueOf(fStatusHum));
+//                        }
+//                    } );
+//                }
+//            }, String.class);
+//
+//            hub.on("notifyNew", new SubscriptionHandler1<String>() {
+//                @Override
+//                public void run(String msg) {
+//                    //Log.d("result := ", msg);
+//                    Log.i("=======Notify", msg);
+//                }
+//            }, String.class);
+//
+//            hub.on("notifyNewDeviceStatus", new SubscriptionHandler1<String>() {
+//                @Override
+//                public void run(String msg) {
+//                    //Log.d("result := ", msg);
+//                    String[] separated = msg.split("=");
+//                    final String fDevice = separated[0];
+//                    final String fStatus = separated[1];
+//                    Log.i("=======Notify", msg);
+//                    handlerDevice.post( new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            if (Integer.valueOf(fDevice) == 1)
+//                            {
+//                                if (Integer.valueOf(fStatus) == 1)
+//                                {
+//                                    tuoinuocBtn.setText("Tắt Tưới nước");
+//                                    mayTuoiNuocStatus.setText("Mở");
+//                                    tuoinuocBtn.setButtonColor(getResources().getColor(R.color.colorAccent));
+//                                }else
+//                                {
+//                                    tuoinuocBtn.setText("Mở Tưới nước");
+//                                    mayTuoiNuocStatus.setText("Tắt");
+//                                    tuoinuocBtn.setButtonColor(getResources().getColor(R.color.primaryText));
+//                                }
+//                            }else
+//                            {
+//                                if (Integer.valueOf(fStatus) == 1)
+//                                {
+//                                    maiCheBtn.setText("Tắt Mái che");
+//                                    manCheStatus.setText("Mở");
+//                                    maiCheBtn.setButtonColor(getResources().getColor(R.color.colorAccent));
+//                                }else
+//                                {
+//                                    maiCheBtn.setText("Mở Mái che");
+//                                    manCheStatus.setText("Tắt");
+//                                    maiCheBtn.setButtonColor(getResources().getColor(R.color.primaryText));
+//                                }
+//                            }
+//                        }
+//                    } );
+//                }
+//            }, String.class);
+
+            return hub;
+        }
+
+        @Override
+        protected void onPostExecute(HubProxy hub) {
+            super.onPostExecute(hub);
+            progressDialog.dismiss();
             hub.on("notifyNewSituation", new SubscriptionHandler1<String>() {
                 @Override
                 public void run(String msg) {
@@ -548,14 +602,6 @@ public class MainFragment extends Fragment {
                     } );
                 }
             }, String.class);
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            progressDialog.dismiss();
         }
     }
 
@@ -621,6 +667,33 @@ public class MainFragment extends Fragment {
             }else {
                 aSwitch.setChecked(true);
             }
+            progressDialog.dismiss();
+        }
+    }
+
+    /**
+     * AsyncTask
+     */
+    public class ChangeProfileStatus extends AsyncTask<Integer, Void, Void> {
+
+        public ChangeProfileStatus() {
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Integer... params) {
+            ProfileService profileService = new ProfileService();
+            profileService.changeProfileUse(GlobalVariable.allProfile.get(params[0]).getIdProfile());
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
             progressDialog.dismiss();
         }
     }

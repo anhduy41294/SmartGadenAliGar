@@ -154,6 +154,29 @@ public class ProfileService {
         }
 
     }
+    public String changeProfileUse(int id) {
+        String stringUrl = BASE_URL + "/change?id="+id;
+        try {
+
+            URL url = new URL(stringUrl); // here is your URL path
+
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setReadTimeout(15000 /* milliseconds */);
+            conn.setConnectTimeout(15000 /* milliseconds */);
+            conn.setRequestMethod("POST");
+           // conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            conn.setDoInput(true);
+            conn.setDoOutput(true);
+
+            int responseCode = conn.getResponseCode();
+            return Integer.toString(responseCode);
+
+        }
+        catch(Exception e){
+            return null;
+        }
+
+    }
 
     public String deleteProfile(int id) {
         String stringUrl = BASE_URL + "/delete?id=" + id;

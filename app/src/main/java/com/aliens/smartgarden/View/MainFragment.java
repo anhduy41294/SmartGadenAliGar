@@ -18,6 +18,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.NumberPicker;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -39,6 +41,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import biz.kasual.materialnumberpicker.MaterialNumberPicker;
+import info.hoang8f.widget.FButton;
 import microsoft.aspnet.signalr.client.Platform;
 import microsoft.aspnet.signalr.client.SignalRFuture;
 import microsoft.aspnet.signalr.client.http.android.AndroidPlatformComponent;
@@ -52,7 +55,7 @@ import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
 public class MainFragment extends Fragment {
 
     Spinner spinner;
-    Button tuoinuocBtn, maiCheBtn;
+    FButton tuoinuocBtn, maiCheBtn;
     GlobalVariable globalVariable;
     RecordAction recordAction;
     TextView nhietDoTxt, doAmTxt, mayTuoiNuocStatus, manCheStatus;
@@ -81,7 +84,7 @@ public class MainFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_main, container, false);
 
         globalVariable = new GlobalVariable();
-        setUpTuoiNuocDialog();
+        //setUpTuoiNuocDialog();
         setUpButton();
 
         nhietDoTxt = (TextView) view.findViewById(R.id.txtTemperature);
@@ -106,6 +109,19 @@ public class MainFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 ChangeMode mode = new ChangeMode();
                 mode.execute(isChecked);
+                if (isChecked) {
+                    tuoinuocBtn.setEnabled(false);
+                    maiCheBtn.setEnabled(false);
+                    tuoinuocBtn.setButtonColor(getResources().getColor(R.color.fbutton_color_asbestos));
+                    maiCheBtn.setButtonColor(getResources().getColor(R.color.fbutton_color_asbestos));
+                } else {
+                    tuoinuocBtn.setEnabled(true);
+                    maiCheBtn.setEnabled(true);
+//                    tuoinuocBtn.setButtonColor(getResources().getColor(R.color.colorPrimary));
+//                    maiCheBtn.setButtonColor(getResources().getColor(R.color.colorPrimary));
+                    RecordSituationDeviceAsyncTask recordSituationDeviceAsyncTask = new RecordSituationDeviceAsyncTask();
+                    recordSituationDeviceAsyncTask.execute();
+                }
             }
         });
 
@@ -144,37 +160,37 @@ public class MainFragment extends Fragment {
 
     }
 
-    private void setUpTuoiNuocDialog() {
-        numberPicker = new MaterialNumberPicker.Builder(view.getContext())
-                .minValue(1)
-                .maxValue(20)
-                .defaultValue(10)
-                .backgroundColor(Color.WHITE)
-                .separatorColor(Color.TRANSPARENT)
-                .textColor(Color.BLACK)
-                .textSize(20)
-                .enableFocusability(false)
-                .wrapSelectorWheel(true)
-                .build();
-
-        alertDialog = new AlertDialog.Builder(view.getContext())
-                .setTitle("Thời gian tưới nước (phút):")
-                .setView(numberPicker)
-                .setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(view.getContext(), String.valueOf(numberPicker.getValue()), Toast.LENGTH_SHORT).show();
-
-                        recordAction = new RecordAction(1, String.valueOf(numberPicker.getValue()));
-                        SendRecordAction sendRecordAction = new SendRecordAction();
-                        sendRecordAction.execute();
-
-                        globalVariable.isTuoiNuoc = true;
-                        tuoinuocBtn.setText("Tắt Tưới nước");
-                        mayTuoiNuocStatus.setText("Tắt");
-                    }
-                });
-    }
+//    private void setUpTuoiNuocDialog() {
+//        numberPicker = new MaterialNumberPicker.Builder(view.getContext())
+//                .minValue(1)
+//                .maxValue(20)
+//                .defaultValue(10)
+//                .backgroundColor(Color.WHITE)
+//                .separatorColor(Color.TRANSPARENT)
+//                .textColor(Color.BLACK)
+//                .textSize(20)
+//                .enableFocusability(false)
+//                .wrapSelectorWheel(true)
+//                .build();
+//
+//        alertDialog = new AlertDialog.Builder(view.getContext())
+//                .setTitle("Thời gian tưới nước (phút):")
+//                .setView(numberPicker)
+//                .setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        Toast.makeText(view.getContext(), String.valueOf(numberPicker.getValue()), Toast.LENGTH_SHORT).show();
+//
+//                        recordAction = new RecordAction(1, String.valueOf(numberPicker.getValue()));
+//                        SendRecordAction sendRecordAction = new SendRecordAction();
+//                        sendRecordAction.execute();
+//
+//                        globalVariable.isTuoiNuoc = true;
+//                        tuoinuocBtn.setText("Tắt Tưới nước");
+//                        mayTuoiNuocStatus.setText("Tắt");
+//                    }
+//                });
+//    }
 
     private void setUpSpinner() {
         spinner = (Spinner) view.findViewById(R.id.spnUserProfile);
@@ -183,6 +199,9 @@ public class MainFragment extends Fragment {
         List<String> categories = new ArrayList<String>();
         for (Profile p:globalVariable.allProfile) {
             categories.add(p.getProfileName());
+            if (p.isStatus()) {
+                GlobalVariable.currentProfile = p;
+            }
         }
 
         // Creating adapter for spinner
@@ -193,11 +212,13 @@ public class MainFragment extends Fragment {
 
         // attaching data adapter to spinner
         spinner.setAdapter(dataAdapter);
+        int spinnerPosition = dataAdapter.getPosition(GlobalVariable.currentProfile.getProfileName());
+        spinner.setSelection(spinnerPosition);
     }
 
     private void setUpButton() {
-        tuoinuocBtn = (Button) view.findViewById(R.id.btnWater);
-        maiCheBtn = (Button) view.findViewById(R.id.btnCover);
+        tuoinuocBtn = (FButton) view.findViewById(R.id.btnWater);
+        maiCheBtn = (FButton) view.findViewById(R.id.btnCover);
 
         tuoinuocBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -211,7 +232,48 @@ public class MainFragment extends Fragment {
                     globalVariable.isTuoiNuoc = false;
                     tuoinuocBtn.setText("Mở tưới nước");
                     mayTuoiNuocStatus.setText("Mở");
+                    tuoinuocBtn.setButtonColor(getResources().getColor(R.color.primaryText));
                 } else {
+                    RelativeLayout linearLayout = new RelativeLayout(view.getContext());
+                    final NumberPicker aNumberPicker = new NumberPicker(view.getContext());
+                    aNumberPicker.setMaxValue(20);
+                    aNumberPicker.setMinValue(1);
+                    aNumberPicker.setValue(10);
+
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(50, 50);
+                    RelativeLayout.LayoutParams numPicerParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    numPicerParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+
+                    linearLayout.setLayoutParams(params);
+                    linearLayout.addView(aNumberPicker,numPicerParams);
+
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(view.getContext());
+                    alertDialogBuilder.setTitle("Thời gian tưới nước (phút):");
+                    alertDialogBuilder.setView(linearLayout);
+                    alertDialogBuilder
+                            .setCancelable(false)
+                            .setPositiveButton("Ok",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog,
+                                                            int id) {
+                                            Log.e("","New Quantity Value : "+ aNumberPicker.getValue());
+                                            globalVariable.isTuoiNuoc = true;
+                                            tuoinuocBtn.setText("Tắt Tưới nước");
+                                            mayTuoiNuocStatus.setText("Tắt");
+                                            tuoinuocBtn.setButtonColor(getResources().getColor(R.color.colorAccent));
+
+                                            recordAction = new RecordAction(1, String.valueOf(aNumberPicker.getValue()*60));
+                                            SendRecordAction sendRecordAction = new SendRecordAction();
+                                            sendRecordAction.execute();
+                                        }
+                                    })
+                            .setNegativeButton("Cancel",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alertDialog = alertDialogBuilder.create();
                     alertDialog.show();
                 }
             }
@@ -229,15 +291,17 @@ public class MainFragment extends Fragment {
                     globalVariable.isManChe = false;
                     maiCheBtn.setText("Tắt mái che");
                     manCheStatus.setText("Mở");
+                    maiCheBtn.setButtonColor(getResources().getColor(R.color.colorAccent));
                 } else {
 
                     recordAction = new RecordAction(4, "1");
                     SendRecordAction sendRecordAction = new SendRecordAction();
                     sendRecordAction.execute();
-                    
+
                     globalVariable.isManChe = true;
                     maiCheBtn.setText("Mở mái che");
                     manCheStatus.setText("Tắt");
+                    maiCheBtn.setButtonColor(getResources().getColor(R.color.primaryText));
                 }
             }
         });
@@ -311,7 +375,6 @@ public class MainFragment extends Fragment {
     public class RecordSituationDeviceAsyncTask extends AsyncTask<String, Void, ArrayList<Device>> {
 
         public RecordSituationDeviceAsyncTask() {
-
         }
 
         @Override
@@ -338,6 +401,16 @@ public class MainFragment extends Fragment {
             maiCheBtn.setText(devices.get(1).isDeviceStatus()?"Tắt mái che" : "Mở mái che");
             mayTuoiNuocStatus.setText(devices.get(0).isDeviceStatus()?"Mở" : "Tắt");
             manCheStatus.setText(devices.get(1).isDeviceStatus()?"Mở" : "Tắt");
+            if (devices.get(0).isDeviceStatus()) {
+                tuoinuocBtn.setButtonColor(getResources().getColor(R.color.colorAccent));
+            } else {
+                tuoinuocBtn.setButtonColor(getResources().getColor(R.color.colorPrimary));
+            }
+            if (devices.get(1).isDeviceStatus()) {
+                maiCheBtn.setButtonColor(getResources().getColor(R.color.colorAccent));
+            } else {
+                maiCheBtn.setButtonColor(getResources().getColor(R.color.colorPrimary));
+            }
             progressDialog.dismiss();
         }
     }
@@ -359,7 +432,6 @@ public class MainFragment extends Fragment {
 
         @Override
         protected ArrayList<Profile> doInBackground(String... params) {
-
             LoaderHelper loaderHelper = new LoaderHelper();
             return loaderHelper.getAllProfile();
         }
@@ -369,7 +441,6 @@ public class MainFragment extends Fragment {
             super.onPostExecute(allProfile);
             globalVariable.allProfile = allProfile;
             setUpSpinner();
-
             progressDialog.dismiss();
         }
     }
@@ -452,10 +523,12 @@ public class MainFragment extends Fragment {
                                 {
                                     tuoinuocBtn.setText("Tắt Tưới nước");
                                     mayTuoiNuocStatus.setText("Mở");
+                                    tuoinuocBtn.setButtonColor(getResources().getColor(R.color.colorAccent));
                                 }else
                                 {
                                     tuoinuocBtn.setText("Mở Tưới nước");
                                     mayTuoiNuocStatus.setText("Tắt");
+                                    tuoinuocBtn.setButtonColor(getResources().getColor(R.color.primaryText));
                                 }
                             }else
                             {
@@ -463,10 +536,12 @@ public class MainFragment extends Fragment {
                                 {
                                     maiCheBtn.setText("Tắt Mái che");
                                     manCheStatus.setText("Mở");
+                                    maiCheBtn.setButtonColor(getResources().getColor(R.color.colorAccent));
                                 }else
                                 {
                                     maiCheBtn.setText("Mở Mái che");
                                     manCheStatus.setText("Tắt");
+                                    maiCheBtn.setButtonColor(getResources().getColor(R.color.primaryText));
                                 }
                             }
                         }

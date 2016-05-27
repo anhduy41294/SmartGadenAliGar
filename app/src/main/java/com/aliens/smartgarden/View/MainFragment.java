@@ -4,7 +4,6 @@ package com.aliens.smartgarden.View;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.NumberPicker;
@@ -24,7 +22,6 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.aliens.smartgarden.Controller.LoaderHelper;
 import com.aliens.smartgarden.Global.GlobalVariable;
@@ -42,7 +39,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import biz.kasual.materialnumberpicker.MaterialNumberPicker;
 import info.hoang8f.widget.FButton;
 import microsoft.aspnet.signalr.client.Platform;
 import microsoft.aspnet.signalr.client.SignalRFuture;
@@ -60,12 +56,10 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
     FButton tuoinuocBtn, maiCheBtn;
     GlobalVariable globalVariable;
     RecordAction recordAction;
-    TextView nhietDoTxt, doAmTxt, mayTuoiNuocStatus, manCheStatus;
+    TextView nhietDoTxt, doAmTxt, lightTxt, mayTuoiNuocStatus, manCheStatus;
     Handler handlerSituation;
     Handler handlerDevice;
     ImageButton imgAddProfile;
-    MaterialNumberPicker numberPicker;
-    AlertDialog.Builder alertDialog;
     View view = null;
     ProgressDialog progressDialog;
     Switch aSwitch;
@@ -93,6 +87,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         doAmTxt = (TextView) view.findViewById(R.id.txtHumidity);
         mayTuoiNuocStatus = (TextView) view.findViewById(R.id.mayTuoiNuocStatus);
         manCheStatus = (TextView) view.findViewById(R.id.manCheStatus);
+        lightTxt = (TextView) view.findViewById(R.id.txtLight);
 
         //Add Profile
         imgAddProfile = (ImageButton) view.findViewById(R.id.imgAddProfile);
@@ -188,13 +183,13 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
                     globalVariable.isTuoiNuoc = false;
                     tuoinuocBtn.setText("Mở tưới nước");
                     mayTuoiNuocStatus.setText("Mở");
-                    tuoinuocBtn.setButtonColor(getResources().getColor(R.color.primaryText));
+                    tuoinuocBtn.setButtonColor(getResources().getColor(R.color.colorPrimary));
                 } else {
                     RelativeLayout linearLayout = new RelativeLayout(view.getContext());
                     final NumberPicker aNumberPicker = new NumberPicker(view.getContext());
                     aNumberPicker.setMaxValue(20);
                     aNumberPicker.setMinValue(1);
-                    aNumberPicker.setValue(10);
+                    aNumberPicker.setValue(1);
 
                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(50, 50);
                     RelativeLayout.LayoutParams numPicerParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -240,24 +235,24 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
             public void onClick(View v) {
                 if (globalVariable.isManChe) {
 
-                    recordAction = new RecordAction(3, "1");
-                    SendRecordAction sendRecordAction = new SendRecordAction();
-                    sendRecordAction.execute();
-
                     globalVariable.isManChe = false;
-                    maiCheBtn.setText("Tắt mái che");
-                    manCheStatus.setText("Mở");
-                    maiCheBtn.setButtonColor(getResources().getColor(R.color.colorAccent));
-                } else {
+                    maiCheBtn.setText("Mở mái che");
+                    manCheStatus.setText("Tắt");
+                    maiCheBtn.setButtonColor(getResources().getColor(R.color.colorPrimary));
 
                     recordAction = new RecordAction(4, "1");
                     SendRecordAction sendRecordAction = new SendRecordAction();
                     sendRecordAction.execute();
+                } else {
 
                     globalVariable.isManChe = true;
-                    maiCheBtn.setText("Mở mái che");
-                    manCheStatus.setText("Tắt");
-                    maiCheBtn.setButtonColor(getResources().getColor(R.color.primaryText));
+                    maiCheBtn.setText("Tắt mái che");
+                    manCheStatus.setText("Mở");
+                    maiCheBtn.setButtonColor(getResources().getColor(R.color.colorAccent));
+
+                    recordAction = new RecordAction(3, "1");
+                    SendRecordAction sendRecordAction = new SendRecordAction();
+                    sendRecordAction.execute();
                 }
             }
         });
@@ -314,6 +309,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
 
             arcProgressTemperature.setProgress((int)o.getTemperature());
             arcProgressHumidity.setProgress((int)o.getHumidity());
+            lightTxt.setText(String.valueOf(Float.valueOf(o.getLight())));
             progressDialog.dismiss();
         }
     }
@@ -426,7 +422,6 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog.show();
         }
 
         @Override
@@ -482,48 +477,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
 //                }
 //            }, String.class);
 //
-//            hub.on("notifyNewDeviceStatus", new SubscriptionHandler1<String>() {
-//                @Override
-//                public void run(String msg) {
-//                    //Log.d("result := ", msg);
-//                    String[] separated = msg.split("=");
-//                    final String fDevice = separated[0];
-//                    final String fStatus = separated[1];
-//                    Log.i("=======Notify", msg);
-//                    handlerDevice.post( new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            if (Integer.valueOf(fDevice) == 1)
-//                            {
-//                                if (Integer.valueOf(fStatus) == 1)
-//                                {
-//                                    tuoinuocBtn.setText("Tắt Tưới nước");
-//                                    mayTuoiNuocStatus.setText("Mở");
-//                                    tuoinuocBtn.setButtonColor(getResources().getColor(R.color.colorAccent));
-//                                }else
-//                                {
-//                                    tuoinuocBtn.setText("Mở Tưới nước");
-//                                    mayTuoiNuocStatus.setText("Tắt");
-//                                    tuoinuocBtn.setButtonColor(getResources().getColor(R.color.primaryText));
-//                                }
-//                            }else
-//                            {
-//                                if (Integer.valueOf(fStatus) == 1)
-//                                {
-//                                    maiCheBtn.setText("Tắt Mái che");
-//                                    manCheStatus.setText("Mở");
-//                                    maiCheBtn.setButtonColor(getResources().getColor(R.color.colorAccent));
-//                                }else
-//                                {
-//                                    maiCheBtn.setText("Mở Mái che");
-//                                    manCheStatus.setText("Tắt");
-//                                    maiCheBtn.setButtonColor(getResources().getColor(R.color.primaryText));
-//                                }
-//                            }
-//                        }
-//                    } );
-//                }
-//            }, String.class);
+
 
             return hub;
         }
@@ -531,73 +485,67 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         @Override
         protected void onPostExecute(HubProxy hub) {
             super.onPostExecute(hub);
-            progressDialog.dismiss();
-            hub.on("notifyNewSituation", new SubscriptionHandler1<String>() {
-                @Override
-                public void run(String msg) {
-                    //Log.d("result := ", msg);
-                    String[] separated = msg.split("=");
-                    final String fStatusTem = separated[0].substring(0, 2);
-                    final String fStatusHum = separated[1].substring(0, 2);
-                    Log.i("=======Notify", msg);
-                    handlerSituation.post( new Runnable() {
-                        @Override
-                        public void run() {
-                            nhietDoTxt.setText(fStatusTem);
-                            doAmTxt.setText(fStatusHum);
-                            arcProgressTemperature.setProgress(Integer.valueOf(fStatusTem));
-                            arcProgressHumidity.setProgress(Integer.valueOf(fStatusHum));
-                        }
-                    } );
-                }
-            }, String.class);
-
-            hub.on("notifyNew", new SubscriptionHandler1<String>() {
-                @Override
-                public void run(String msg) {
-                    //Log.d("result := ", msg);
-                    Log.i("=======Notify", msg);
-                }
-            }, String.class);
-
             hub.on("notifyNewDeviceStatus", new SubscriptionHandler1<String>() {
                 @Override
                 public void run(String msg) {
                     //Log.d("result := ", msg);
                     String[] separated = msg.split("=");
-                    final String fDevice = separated[0];
-                    final String fStatus = separated[1];
+                    final String fflag = separated[0];
+                    final String f1;
+                    final String f2;
+                    final String f3;
+                    if(Integer.valueOf(fflag) == 0)
+                    {
+                        f1 = separated[1];
+                        f2 = separated[2];
+                        f3 = separated[3];
+                    }else {
+                        f1 = separated[1];
+                        f2 = "0";
+                        f3 = "0";
+                    }
+
+
                     Log.i("=======Notify", msg);
                     handlerDevice.post( new Runnable() {
                         @Override
                         public void run() {
-                            if (Integer.valueOf(fDevice) == 1)
+                            if(Integer.valueOf(fflag) == 0)
                             {
-                                if (Integer.valueOf(fStatus) == 1)
-                                {
-                                    tuoinuocBtn.setText("Tắt Tưới nước");
-                                    mayTuoiNuocStatus.setText("Mở");
-                                    tuoinuocBtn.setButtonColor(getResources().getColor(R.color.colorAccent));
-                                }else
-                                {
-                                    tuoinuocBtn.setText("Mở Tưới nước");
-                                    mayTuoiNuocStatus.setText("Tắt");
-                                    tuoinuocBtn.setButtonColor(getResources().getColor(R.color.primaryText));
-                                }
+                                arcProgressTemperature.setProgress(Math.round(Float.valueOf(f1)));
+                                arcProgressHumidity.setProgress(Math.round(Float.valueOf(f2)));
+                                lightTxt.setText(String.valueOf(Float.valueOf(f3)));
                             }else
                             {
-                                if (Integer.valueOf(fStatus) == 1)
+                                if (Integer.valueOf(fflag) == 1)
                                 {
-                                    maiCheBtn.setText("Tắt Mái che");
-                                    manCheStatus.setText("Mở");
-                                    maiCheBtn.setButtonColor(getResources().getColor(R.color.colorAccent));
+                                    if (Integer.valueOf(f1) == 1)
+                                    {
+                                        tuoinuocBtn.setText("Tắt Tưới nước");
+                                        mayTuoiNuocStatus.setText("Mở");
+                                        tuoinuocBtn.setButtonColor(getResources().getColor(R.color.colorAccent));
+                                    }else
+                                    {
+                                        tuoinuocBtn.setText("Mở Tưới nước");
+                                        mayTuoiNuocStatus.setText("Tắt");
+                                        tuoinuocBtn.setButtonColor(getResources().getColor(R.color.colorPrimary));
+                                    }
                                 }else
                                 {
-                                    maiCheBtn.setText("Mở Mái che");
-                                    manCheStatus.setText("Tắt");
-                                    maiCheBtn.setButtonColor(getResources().getColor(R.color.primaryText));
+                                    if (Integer.valueOf(f1) == 1)
+                                    {
+//                                        maiCheBtn.setText("Tắt Mái che");
+//                                        manCheStatus.setText("Mở");
+//                                        maiCheBtn.setButtonColor(getResources().getColor(R.color.colorAccent));
+                                    }else
+                                    {
+//                                        maiCheBtn.setText("Mở Mái che");
+//                                        manCheStatus.setText("Tắt");
+//                                        maiCheBtn.setButtonColor(getResources().getColor(R.color.colorPrimary));
+                                    }
                                 }
                             }
+
                         }
                     } );
                 }
@@ -608,7 +556,6 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
     public class ChangeMode extends AsyncTask<Boolean, Void, Void> {
 
         public ChangeMode() {
-
         }
 
         @Override
@@ -640,7 +587,6 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
     public class LoadMode extends AsyncTask<Void, Void, Boolean> {
 
         public LoadMode() {
-
         }
 
         @Override

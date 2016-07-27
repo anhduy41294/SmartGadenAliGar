@@ -32,7 +32,8 @@
                 android:id="@+id/tbDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:stretchColumns="*">
+                android:stretchColumns="*"
+                android:layout_marginTop="25dp">
 
                 <TableRow
                     android:layout_width="match_parent"
@@ -63,7 +64,7 @@
                         android:layout_width="120.0dip"
                         android:layout_height="120.0dip"
                         android:layout_marginBottom="25.0dip"
-                        android:layout_marginLeft="15.0dip"
+                        android:layout_marginLeft="35.0dip"
                         custom:arc_bottom_text="Nhiệt độ"
                         custom:arc_bottom_text_size="14.0dip"
                         custom:arc_progress="10"
@@ -77,7 +78,7 @@
                         android:layout_width="120.0dip"
                         android:layout_height="120.0dip"
                         android:layout_marginBottom="25.0dip"
-                        android:layout_marginLeft="15.0dip"
+                        android:layout_marginLeft="25.0dip"
                         custom:arc_bottom_text="Độ ẩm"
                         custom:arc_bottom_text_size="14.0dip"
                         custom:arc_progress="10"
@@ -118,7 +119,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="bottom"
-                    android:textAlignment="textEnd"
                     android:layout_marginTop="4dp"
                     android:textColor="@color/colorAccent"/>
             </LinearLayout>
@@ -132,13 +132,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Chế độ điều khiển"
-                android:textColor="@color/colorPrimaryDark" />
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_marginTop="2dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="5dp">
+                android:padding="5dp"
+                android:layout_marginBottom="5dp">
 
                 <info.hoang8f.widget.FButton
                     android:id="@+id/btnWater"
@@ -182,13 +184,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Chế độ tự động"
-                android:textColor="@color/colorPrimaryDark" />
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_marginTop="2dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:orientation="vertical"
-                android:padding="5dp">
+                android:padding="5dp"
+                android:layout_marginBottom="5dp">
 
                 <Switch
                     android:id="@+id/autoSwitch"
@@ -235,7 +239,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Trạng thái của các thiết bị"
-                android:textColor="@color/colorPrimaryDark" />
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_marginTop="2dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -246,7 +251,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_marginTop="5dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -269,7 +275,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_marginTop="5dp">
 
                     <TextView
                         android:id="@+id/mayTuoiNuocStatus"
@@ -279,7 +286,7 @@
                         android:text="TẮT"
                         android:textAlignment="center"
                         android:textColor="@color/green"
-                        android:textSize="40dp" />
+                        android:textSize="50dp" />
 
                     <TextView
                         android:id="@+id/manCheStatus"
@@ -289,7 +296,7 @@
                         android:text="MỞ"
                         android:textAlignment="center"
                         android:textColor="@color/green"
-                        android:textSize="40dp" />
+                        android:textSize="50dp" />
                 </LinearLayout>
             </LinearLayout>
 

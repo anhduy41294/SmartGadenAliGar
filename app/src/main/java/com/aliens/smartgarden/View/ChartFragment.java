@@ -203,12 +203,12 @@ public class ChartFragment extends Fragment {
         int currentHour24 = c.get(Calendar.HOUR_OF_DAY);
 
         ArrayList<String> m = new ArrayList<String>();
-        m.add(String.valueOf(currentHour24-10)+"g");
-        m.add(String.valueOf(currentHour24-8)+"g");
-        m.add(String.valueOf(currentHour24-6)+"g");
-        m.add(String.valueOf(currentHour24-4)+"g");
-        m.add(String.valueOf(currentHour24-2)+"g");
-        m.add(String.valueOf(currentHour24)+"g");
+        m.add("1");
+        m.add("2");
+        m.add("3");
+        m.add("4");
+        m.add("5");
+        m.add("6");
 
         return m;
     }

@@ -56,7 +56,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
     FButton tuoinuocBtn, maiCheBtn;
     GlobalVariable globalVariable;
     RecordAction recordAction;
-    TextView nhietDoTxt, doAmTxt, lightTxt, mayTuoiNuocStatus, manCheStatus;
+    TextView nhietDoTxt, doAmTxt, lightTxt, mayTuoiNuocStatus, manCheStatus, txtGoiY;
     Handler handlerSituation;
     Handler handlerDevice;
     ImageButton imgAddProfile;
@@ -88,6 +88,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         mayTuoiNuocStatus = (TextView) view.findViewById(R.id.mayTuoiNuocStatus);
         manCheStatus = (TextView) view.findViewById(R.id.manCheStatus);
         lightTxt = (TextView) view.findViewById(R.id.txtLight);
+        txtGoiY = (TextView) view.findViewById(R.id.txtGoiY);
 
         //Add Profile
         imgAddProfile = (ImageButton) view.findViewById(R.id.imgAddProfile);
@@ -111,11 +112,14 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
                     maiCheBtn.setEnabled(false);
                     tuoinuocBtn.setButtonColor(getResources().getColor(R.color.fbutton_color_asbestos));
                     maiCheBtn.setButtonColor(getResources().getColor(R.color.fbutton_color_asbestos));
+                    txtGoiY.setText("");
                 } else {
                     tuoinuocBtn.setEnabled(true);
                     maiCheBtn.setEnabled(true);
                     RecordSituationDeviceAsyncTask recordSituationDeviceAsyncTask = new RecordSituationDeviceAsyncTask();
                     recordSituationDeviceAsyncTask.execute();
+                    RecordSituationAsyncTask recordSituationAsyncTask = new RecordSituationAsyncTask();
+                    recordSituationAsyncTask.execute();
                 }
             }
         });
@@ -128,16 +132,16 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         handlerSituation = new Handler();
         handlerDevice = new Handler();
 
+        LoadMode loadMode = new LoadMode();
+        loadMode.execute();
+        getAllProfile getAllProfile = new getAllProfile();
+        getAllProfile.execute();
         RecordSituationAsyncTask recordSituationAsyncTask = new RecordSituationAsyncTask();
         recordSituationAsyncTask.execute();
         RecordSituationDeviceAsyncTask recordSituationDeviceAsyncTask = new RecordSituationDeviceAsyncTask();
         recordSituationDeviceAsyncTask.execute();
-        getAllProfile getAllProfile = new getAllProfile();
-        getAllProfile.execute();
         SetupPushNoti setupPushNoti = new SetupPushNoti();
         setupPushNoti.execute();
-        LoadMode loadMode = new LoadMode();
-        loadMode.execute();
 
         return view;
     }
@@ -207,7 +211,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
                                     new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog,
                                                             int id) {
-                                            Log.e("","New Quantity Value : "+ aNumberPicker.getValue());
+                                            //Log.e("","New Quantity Value : "+ aNumberPicker.getValue());
                                             globalVariable.isTuoiNuoc = true;
                                             tuoinuocBtn.setText("Tắt Tưới nước");
                                             mayTuoiNuocStatus.setText("Tắt");
@@ -310,6 +314,21 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
             arcProgressTemperature.setProgress((int)o.getTemperature());
             arcProgressHumidity.setProgress((int)o.getHumidity());
             lightTxt.setText(String.valueOf(Float.valueOf(o.getLight())));
+            if (GlobalVariable.currentProfile!=null && !aSwitch.isChecked()) {
+                if (o.getHumidity()<GlobalVariable.currentProfile.getHumidityStandard() && o.getTemperature()>GlobalVariable.currentProfile.getTemperatureStandard()) {
+                    txtGoiY.setText("Nhiệt độ cao và độ ẩm thấp");
+                } else {
+                    if (o.getTemperature()>GlobalVariable.currentProfile.getTemperatureStandard()) {
+                        txtGoiY.setText("Nhiệt độ cao");
+                    } else {
+                        if (o.getHumidity()<GlobalVariable.currentProfile.getHumidityStandard()) {
+                            txtGoiY.setText("Độ ẩm thấp");
+                        } else {
+                            txtGoiY.setText("");
+                        }
+                    }
+                }
+            }
             progressDialog.dismiss();
         }
     }
@@ -399,7 +418,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog.show();
+            //progressDialog.show();
         }
 
         @Override
@@ -413,7 +432,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
             super.onPostExecute(allProfile);
             globalVariable.allProfile = allProfile;
             setUpSpinner();
-            progressDialog.dismiss();
+           // progressDialog.dismiss();
         }
     }
 
@@ -504,8 +523,6 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
                         f2 = "0";
                         f3 = "0";
                     }
-
-
                     Log.i("=======Notify", msg);
                     handlerDevice.post( new Runnable() {
                         @Override
@@ -515,6 +532,21 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
                                 arcProgressTemperature.setProgress(Math.round(Float.valueOf(f1)));
                                 arcProgressHumidity.setProgress(Math.round(Float.valueOf(f2)));
                                 lightTxt.setText(String.valueOf(Float.valueOf(f3)));
+                                if (GlobalVariable.currentProfile!=null && !aSwitch.isChecked()) {
+                                    if (Float.valueOf(f2)<GlobalVariable.currentProfile.getHumidityStandard() && Float.valueOf(f1)>GlobalVariable.currentProfile.getTemperatureStandard()) {
+                                        txtGoiY.setText("Nhiệt độ cao, độ ẩm thấp");
+                                    } else {
+                                        if (Float.valueOf(f1)>GlobalVariable.currentProfile.getTemperatureStandard()) {
+                                            txtGoiY.setText("Nhiệt độ cao");
+                                        } else {
+                                            if (Float.valueOf(f2)<GlobalVariable.currentProfile.getHumidityStandard()) {
+                                                txtGoiY.setText("Độ ẩm thấp");
+                                            } else {
+                                                txtGoiY.setText("");
+                                            }
+                                        }
+                                    }
+                                }
                             }else
                             {
                                 if (Integer.valueOf(fflag) == 1)
@@ -592,7 +624,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog.show();
+           // progressDialog.show();
         }
 
         @Override
@@ -613,7 +645,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemSelected
             }else {
                 aSwitch.setChecked(true);
             }
-            progressDialog.dismiss();
+            //progressDialog.dismiss();
         }
     }
 
